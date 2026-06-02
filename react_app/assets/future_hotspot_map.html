@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_fe7379ae3c9b18274406a8138ed2a53e {
+                #map_5834166fadc2ea455dd3e2ea99b9aba4 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -53,18 +53,18 @@
 </head>
 <body>
     
-    <div style="position:fixed;top:10px;left:50px;z-index:9999;background:white;padding:8px 12px;border-radius:6px;font-weight:600;">Future Hotspot Prediction — January 2063</div>
+    <div style="position:fixed;top:10px;left:50px;z-index:9999;background:white;padding:8px 12px;border-radius:6px;font-weight:600;">Future Hotspot Prediction — January 2027</div>
     
-            <div class="folium-map" id="map_fe7379ae3c9b18274406a8138ed2a53e" ></div>
+            <div class="folium-map" id="map_5834166fadc2ea455dd3e2ea99b9aba4" ></div>
         
 </body>
 <script>
     
     
-            var map_fe7379ae3c9b18274406a8138ed2a53e = L.map(
-                "map_fe7379ae3c9b18274406a8138ed2a53e",
+            var map_5834166fadc2ea455dd3e2ea99b9aba4 = L.map(
+                "map_5834166fadc2ea455dd3e2ea99b9aba4",
                 {
-                    center: [41.85249221628604, -87.6661775074111],
+                    center: [41.85319182446422, -87.66520690630517],
                     crs: L.CRS.EPSG3857,
                     ...{
   "zoom": 10,
@@ -79,7 +79,7 @@
 
         
     
-            var tile_layer_2a0a30244b1eb64c1ba004c498af5a1d = L.tileLayer(
+            var tile_layer_eb3e0d27c2457947c7b8ef1b1afe92bd = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -96,35 +96,35 @@
             );
         
     
-            tile_layer_2a0a30244b1eb64c1ba004c498af5a1d.addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            tile_layer_eb3e0d27c2457947c7b8ef1b1afe92bd.addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-            var circle_marker_623c377cbc50033738511e2419616ebd = L.circleMarker(
-                [41.96131623406053, -87.72117859243664],
-                {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            var circle_marker_4c6f4d8fd4ef51dd7faef0e19de25708 = L.circleMarker(
+                [41.96394223421519, -87.71992493011393],
+                {"bubblingMouseEvents": true, "color": "#16a34a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#16a34a", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_8926ec14394d7e142abfe6fcd1e4e51c = L.popup({
+        var popup_7e519e92f97b8241d863e6a8496b31d5 = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_603350d93ecb33bcdedfa60cf97086e8 = $(`<div id="html_603350d93ecb33bcdedfa60cf97086e8" style="width: 100.0%; height: 100.0%;"><b>District:</b> Albany Park (17)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 35.58<br><b>Risk Score:</b> 86.51<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_8926ec14394d7e142abfe6fcd1e4e51c.setContent(html_603350d93ecb33bcdedfa60cf97086e8);
+                var html_b0732b4e3f785f315a503066dd8ed1da = $(`<div id="html_b0732b4e3f785f315a503066dd8ed1da" style="width: 100.0%; height: 100.0%;"><b>District:</b> Albany Park (17)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 0.83<br><b>Risk Score:</b> 0.0<br><b>Risk Level:</b> LOW</div>`)[0];
+                popup_7e519e92f97b8241d863e6a8496b31d5.setContent(html_b0732b4e3f785f315a503066dd8ed1da);
             
         
 
-        circle_marker_623c377cbc50033738511e2419616ebd.bindPopup(popup_8926ec14394d7e142abfe6fcd1e4e51c)
+        circle_marker_4c6f4d8fd4ef51dd7faef0e19de25708.bindPopup(popup_7e519e92f97b8241d863e6a8496b31d5)
         ;
 
         
     
     
-            circle_marker_623c377cbc50033738511e2419616ebd.bindTooltip(
+            circle_marker_4c6f4d8fd4ef51dd7faef0e19de25708.bindTooltip(
                 `<div>
-                     Albany Park — HIGH
+                     Albany Park — LOW
                  </div>`,
                 {
   "sticky": true,
@@ -132,30 +132,30 @@
             );
         
     
-            var circle_marker_e5d78a8cc85167adb8f7b3f0b838db94 = L.circleMarker(
-                [41.885393358722084, -87.75978151489338],
+            var circle_marker_7600696afe72119a50297c3f835d8581 = L.circleMarker(
+                [41.887255231434786, -87.76072632373912],
                 {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_955503df6c90c73c058c225a916cce54 = L.popup({
+        var popup_0d3a285dddf0e39adee106924f037375 = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_75d2f685bdc30cbd9fefde95ba53a97b = $(`<div id="html_75d2f685bdc30cbd9fefde95ba53a97b" style="width: 100.0%; height: 100.0%;"><b>District:</b> Austin (15)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 37.05<br><b>Risk Score:</b> 88.96<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_955503df6c90c73c058c225a916cce54.setContent(html_75d2f685bdc30cbd9fefde95ba53a97b);
+                var html_c0316765bbc745ba1b41bd051b1c3b35 = $(`<div id="html_c0316765bbc745ba1b41bd051b1c3b35" style="width: 100.0%; height: 100.0%;"><b>District:</b> Austin (15)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 5.56<br><b>Risk Score:</b> 99.03<br><b>Risk Level:</b> HIGH</div>`)[0];
+                popup_0d3a285dddf0e39adee106924f037375.setContent(html_c0316765bbc745ba1b41bd051b1c3b35);
             
         
 
-        circle_marker_e5d78a8cc85167adb8f7b3f0b838db94.bindPopup(popup_955503df6c90c73c058c225a916cce54)
+        circle_marker_7600696afe72119a50297c3f835d8581.bindPopup(popup_0d3a285dddf0e39adee106924f037375)
         ;
 
         
     
     
-            circle_marker_e5d78a8cc85167adb8f7b3f0b838db94.bindTooltip(
+            circle_marker_7600696afe72119a50297c3f835d8581.bindTooltip(
                 `<div>
                      Austin — HIGH
                  </div>`,
@@ -165,32 +165,32 @@
             );
         
     
-            var circle_marker_6b76f0b54a255118d76d9662bf93dcab = L.circleMarker(
-                [41.68683236190831, -87.62159680896184],
-                {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            var circle_marker_7915607b53a42c23ebfeda0c85d181a5 = L.circleMarker(
+                [41.69377858162963, -87.61718253818518],
+                {"bubblingMouseEvents": true, "color": "#16a34a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#16a34a", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_1e7e8119a0030b7b51b550b073e4c974 = L.popup({
+        var popup_89b6d593d95654b2dca02052eab1cc28 = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_3ee6f909dfef93f900df4b23c19172a3 = $(`<div id="html_3ee6f909dfef93f900df4b23c19172a3" style="width: 100.0%; height: 100.0%;"><b>District:</b> Calumet (5)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 48.97<br><b>Risk Score:</b> 96.83<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_1e7e8119a0030b7b51b550b073e4c974.setContent(html_3ee6f909dfef93f900df4b23c19172a3);
+                var html_146f77ef6438cdbce82d11cb12208629 = $(`<div id="html_146f77ef6438cdbce82d11cb12208629" style="width: 100.0%; height: 100.0%;"><b>District:</b> Calumet (5)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 0.82<br><b>Risk Score:</b> 0.0<br><b>Risk Level:</b> LOW</div>`)[0];
+                popup_89b6d593d95654b2dca02052eab1cc28.setContent(html_146f77ef6438cdbce82d11cb12208629);
             
         
 
-        circle_marker_6b76f0b54a255118d76d9662bf93dcab.bindPopup(popup_1e7e8119a0030b7b51b550b073e4c974)
+        circle_marker_7915607b53a42c23ebfeda0c85d181a5.bindPopup(popup_89b6d593d95654b2dca02052eab1cc28)
         ;
 
         
     
     
-            circle_marker_6b76f0b54a255118d76d9662bf93dcab.bindTooltip(
+            circle_marker_7915607b53a42c23ebfeda0c85d181a5.bindTooltip(
                 `<div>
-                     Calumet — HIGH
+                     Calumet — LOW
                  </div>`,
                 {
   "sticky": true,
@@ -198,32 +198,32 @@
             );
         
     
-            var circle_marker_a20d07be1ab549ac5aa0ced01107cf90 = L.circleMarker(
-                [41.87170709149523, -87.6302484280764],
-                {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            var circle_marker_41f6d26dc756dab4f1c6b0b8216f6056 = L.circleMarker(
+                [41.874537395188234, -87.62993863334117],
+                {"bubblingMouseEvents": true, "color": "#16a34a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#16a34a", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_564b43900b3d8cf15ec76be6a0741661 = L.popup({
+        var popup_d0372eb6514e04fc2cd3d9cc500b28cb = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_4fc0b63331b25f5164ce250577092099 = $(`<div id="html_4fc0b63331b25f5164ce250577092099" style="width: 100.0%; height: 100.0%;"><b>District:</b> Central (1)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 36.25<br><b>Risk Score:</b> 87.66<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_564b43900b3d8cf15ec76be6a0741661.setContent(html_4fc0b63331b25f5164ce250577092099);
+                var html_61ca89df2b6aa6b24a07df37162faaf7 = $(`<div id="html_61ca89df2b6aa6b24a07df37162faaf7" style="width: 100.0%; height: 100.0%;"><b>District:</b> Central (1)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 0.77<br><b>Risk Score:</b> 0.0<br><b>Risk Level:</b> LOW</div>`)[0];
+                popup_d0372eb6514e04fc2cd3d9cc500b28cb.setContent(html_61ca89df2b6aa6b24a07df37162faaf7);
             
         
 
-        circle_marker_a20d07be1ab549ac5aa0ced01107cf90.bindPopup(popup_564b43900b3d8cf15ec76be6a0741661)
+        circle_marker_41f6d26dc756dab4f1c6b0b8216f6056.bindPopup(popup_d0372eb6514e04fc2cd3d9cc500b28cb)
         ;
 
         
     
     
-            circle_marker_a20d07be1ab549ac5aa0ced01107cf90.bindTooltip(
+            circle_marker_41f6d26dc756dab4f1c6b0b8216f6056.bindTooltip(
                 `<div>
-                     Central — HIGH
+                     Central — LOW
                  </div>`,
                 {
   "sticky": true,
@@ -231,30 +231,30 @@
             );
         
     
-            var circle_marker_adab7bb5870f63113bbc445c6db2edbe = L.circleMarker(
-                [41.777668658938396, -87.71694257358361],
+            var circle_marker_a6e81ac0b02ca04b788316cea3565755 = L.circleMarker(
+                [41.774803472660196, -87.72639130925243],
                 {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_0675b5ae4c5b944f9020f165a272b413 = L.popup({
+        var popup_b7e27e2ab25de5acc69ab76e82982aae = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_0836bea7bc49d95006a83b38c4e8400d = $(`<div id="html_0836bea7bc49d95006a83b38c4e8400d" style="width: 100.0%; height: 100.0%;"><b>District:</b> Chicago Lawn (8)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 37.15<br><b>Risk Score:</b> 88.96<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_0675b5ae4c5b944f9020f165a272b413.setContent(html_0836bea7bc49d95006a83b38c4e8400d);
+                var html_5b2f14d0163e73aa438c213b13d19494 = $(`<div id="html_5b2f14d0163e73aa438c213b13d19494" style="width: 100.0%; height: 100.0%;"><b>District:</b> Chicago Lawn (8)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 3.63<br><b>Risk Score:</b> 92.81<br><b>Risk Level:</b> HIGH</div>`)[0];
+                popup_b7e27e2ab25de5acc69ab76e82982aae.setContent(html_5b2f14d0163e73aa438c213b13d19494);
             
         
 
-        circle_marker_adab7bb5870f63113bbc445c6db2edbe.bindPopup(popup_0675b5ae4c5b944f9020f165a272b413)
+        circle_marker_a6e81ac0b02ca04b788316cea3565755.bindPopup(popup_b7e27e2ab25de5acc69ab76e82982aae)
         ;
 
         
     
     
-            circle_marker_adab7bb5870f63113bbc445c6db2edbe.bindTooltip(
+            circle_marker_a6e81ac0b02ca04b788316cea3565755.bindTooltip(
                 `<div>
                      Chicago Lawn — HIGH
                  </div>`,
@@ -264,32 +264,32 @@
             );
         
     
-            var circle_marker_2fd02a3f7b36d2a1c411fa266aa44d7b = L.circleMarker(
-                [41.81688472494601, -87.6658860715126],
-                {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            var circle_marker_61454538e6ed9ec29b39e86b80b367eb = L.circleMarker(
+                [41.82301439222223, -87.65987721969445],
+                {"bubblingMouseEvents": true, "color": "#eab308", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#eab308", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_765d82d8de3ac0d13fe3fb7e97ecc07e = L.popup({
+        var popup_dd27fe7a2ac7f077c0720694fa341d61 = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_ea68e3690b52d7ba05b4373154065b58 = $(`<div id="html_ea68e3690b52d7ba05b4373154065b58" style="width: 100.0%; height: 100.0%;"><b>District:</b> Deering (9)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 34.68<br><b>Risk Score:</b> 84.63<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_765d82d8de3ac0d13fe3fb7e97ecc07e.setContent(html_ea68e3690b52d7ba05b4373154065b58);
+                var html_593745bdf53dbb0e330d690510d27e3e = $(`<div id="html_593745bdf53dbb0e330d690510d27e3e" style="width: 100.0%; height: 100.0%;"><b>District:</b> Deering (9)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 1.77<br><b>Risk Score:</b> 54.5<br><b>Risk Level:</b> MEDIUM</div>`)[0];
+                popup_dd27fe7a2ac7f077c0720694fa341d61.setContent(html_593745bdf53dbb0e330d690510d27e3e);
             
         
 
-        circle_marker_2fd02a3f7b36d2a1c411fa266aa44d7b.bindPopup(popup_765d82d8de3ac0d13fe3fb7e97ecc07e)
+        circle_marker_61454538e6ed9ec29b39e86b80b367eb.bindPopup(popup_dd27fe7a2ac7f077c0720694fa341d61)
         ;
 
         
     
     
-            circle_marker_2fd02a3f7b36d2a1c411fa266aa44d7b.bindTooltip(
+            circle_marker_61454538e6ed9ec29b39e86b80b367eb.bindTooltip(
                 `<div>
-                     Deering — HIGH
+                     Deering — MEDIUM
                  </div>`,
                 {
   "sticky": true,
@@ -297,30 +297,30 @@
             );
         
     
-            var circle_marker_1a7b7062bb0f207cd09b39c86277c8bc = L.circleMarker(
-                [41.77474662478252, -87.65214592509061],
+            var circle_marker_852a2b8b4229f708c82a9397431cf9cb = L.circleMarker(
+                [41.77026103763889, -87.64910192294445],
                 {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_d648c23977e86fe36ee16d1adbe206c2 = L.popup({
+        var popup_16ab406488d5ce3a81540676ce185ee8 = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_619229b7b5cceab1609c057df2a8c003 = $(`<div id="html_619229b7b5cceab1609c057df2a8c003" style="width: 100.0%; height: 100.0%;"><b>District:</b> Englewood (7)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 36.84<br><b>Risk Score:</b> 87.66<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_d648c23977e86fe36ee16d1adbe206c2.setContent(html_619229b7b5cceab1609c057df2a8c003);
+                var html_919870bcbd49d77db0bc6f773e5ed9e9 = $(`<div id="html_919870bcbd49d77db0bc6f773e5ed9e9" style="width: 100.0%; height: 100.0%;"><b>District:</b> Englewood (7)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 2.05<br><b>Risk Score:</b> 82.02<br><b>Risk Level:</b> HIGH</div>`)[0];
+                popup_16ab406488d5ce3a81540676ce185ee8.setContent(html_919870bcbd49d77db0bc6f773e5ed9e9);
             
         
 
-        circle_marker_1a7b7062bb0f207cd09b39c86277c8bc.bindPopup(popup_d648c23977e86fe36ee16d1adbe206c2)
+        circle_marker_852a2b8b4229f708c82a9397431cf9cb.bindPopup(popup_16ab406488d5ce3a81540676ce185ee8)
         ;
 
         
     
     
-            circle_marker_1a7b7062bb0f207cd09b39c86277c8bc.bindTooltip(
+            circle_marker_852a2b8b4229f708c82a9397431cf9cb.bindTooltip(
                 `<div>
                      Englewood — HIGH
                  </div>`,
@@ -330,32 +330,32 @@
             );
         
     
-            var circle_marker_5f3df88816df2dc19f134dc08053ba2c = L.circleMarker(
-                [41.9203499846463, -87.7535165411364],
-                {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            var circle_marker_6d2594f597510576c4909b6e208e1c8f = L.circleMarker(
+                [41.92219173174359, -87.75125272932051],
+                {"bubblingMouseEvents": true, "color": "#eab308", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#eab308", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_e320d43a1e9dc13032d27e9d3789c9f3 = L.popup({
+        var popup_f08163535a8d59dbf05e46edf0a80109 = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_cec10b3a17a06f8b58595e8bd054cfbd = $(`<div id="html_cec10b3a17a06f8b58595e8bd054cfbd" style="width: 100.0%; height: 100.0%;"><b>District:</b> Grand Central (25)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 44.47<br><b>Risk Score:</b> 95.67<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_e320d43a1e9dc13032d27e9d3789c9f3.setContent(html_cec10b3a17a06f8b58595e8bd054cfbd);
+                var html_ddbded12d9c62ad1fcdf81b92deca10a = $(`<div id="html_ddbded12d9c62ad1fcdf81b92deca10a" style="width: 100.0%; height: 100.0%;"><b>District:</b> Grand Central (25)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 1.91<br><b>Risk Score:</b> 54.5<br><b>Risk Level:</b> MEDIUM</div>`)[0];
+                popup_f08163535a8d59dbf05e46edf0a80109.setContent(html_ddbded12d9c62ad1fcdf81b92deca10a);
             
         
 
-        circle_marker_5f3df88816df2dc19f134dc08053ba2c.bindPopup(popup_e320d43a1e9dc13032d27e9d3789c9f3)
+        circle_marker_6d2594f597510576c4909b6e208e1c8f.bindPopup(popup_f08163535a8d59dbf05e46edf0a80109)
         ;
 
         
     
     
-            circle_marker_5f3df88816df2dc19f134dc08053ba2c.bindTooltip(
+            circle_marker_6d2594f597510576c4909b6e208e1c8f.bindTooltip(
                 `<div>
-                     Grand Central — HIGH
+                     Grand Central — MEDIUM
                  </div>`,
                 {
   "sticky": true,
@@ -363,30 +363,30 @@
             );
         
     
-            var circle_marker_e4fbfe66bd4e82fe663a12ab6478ce06 = L.circleMarker(
-                [41.77096791609017, -87.5950098393617],
+            var circle_marker_a879bd18690571809bff13f8743d80e6 = L.circleMarker(
+                [41.77026134765854, -87.58596050456097],
                 {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_32a6470e3f4011e6a3d05b4ebc05e4a3 = L.popup({
+        var popup_33a92a51b836025bea8d4bb5a2c7eb3a = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_fcf511eb1b8659f341c96f987cc99a87 = $(`<div id="html_fcf511eb1b8659f341c96f987cc99a87" style="width: 100.0%; height: 100.0%;"><b>District:</b> Grand Crossing (3)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 40.47<br><b>Risk Score:</b> 93.22<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_32a6470e3f4011e6a3d05b4ebc05e4a3.setContent(html_fcf511eb1b8659f341c96f987cc99a87);
+                var html_5af4cd72ed2b19b4eea514f666e72fcc = $(`<div id="html_5af4cd72ed2b19b4eea514f666e72fcc" style="width: 100.0%; height: 100.0%;"><b>District:</b> Grand Crossing (3)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 3.56<br><b>Risk Score:</b> 92.81<br><b>Risk Level:</b> HIGH</div>`)[0];
+                popup_33a92a51b836025bea8d4bb5a2c7eb3a.setContent(html_5af4cd72ed2b19b4eea514f666e72fcc);
             
         
 
-        circle_marker_e4fbfe66bd4e82fe663a12ab6478ce06.bindPopup(popup_32a6470e3f4011e6a3d05b4ebc05e4a3)
+        circle_marker_a879bd18690571809bff13f8743d80e6.bindPopup(popup_33a92a51b836025bea8d4bb5a2c7eb3a)
         ;
 
         
     
     
-            circle_marker_e4fbfe66bd4e82fe663a12ab6478ce06.bindTooltip(
+            circle_marker_a879bd18690571809bff13f8743d80e6.bindTooltip(
                 `<div>
                      Grand Crossing — HIGH
                  </div>`,
@@ -396,30 +396,30 @@
             );
         
     
-            var circle_marker_f14444e1655c0268d6b732195fa67f2c = L.circleMarker(
-                [41.746263691034144, -87.63066462490299],
+            var circle_marker_3084ee8910ac47c7ac1d1c8d5ca57d9f = L.circleMarker(
+                [41.74706006105454, -87.63579516676364],
                 {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_f0a23acbd247ed57f5ddb84156acc1a7 = L.popup({
+        var popup_a6e0bb4751a578a6b747586298d30f43 = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_0ad23b57cfcb7e46c967716e45f87a95 = $(`<div id="html_0ad23b57cfcb7e46c967716e45f87a95" style="width: 100.0%; height: 100.0%;"><b>District:</b> Gresham (6)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 44.94<br><b>Risk Score:</b> 95.67<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_f0a23acbd247ed57f5ddb84156acc1a7.setContent(html_0ad23b57cfcb7e46c967716e45f87a95);
+                var html_c707d7434f53e4131cde093496437ba7 = $(`<div id="html_c707d7434f53e4131cde093496437ba7" style="width: 100.0%; height: 100.0%;"><b>District:</b> Gresham (6)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 3.84<br><b>Risk Score:</b> 92.81<br><b>Risk Level:</b> HIGH</div>`)[0];
+                popup_a6e0bb4751a578a6b747586298d30f43.setContent(html_c707d7434f53e4131cde093496437ba7);
             
         
 
-        circle_marker_f14444e1655c0268d6b732195fa67f2c.bindPopup(popup_f0a23acbd247ed57f5ddb84156acc1a7)
+        circle_marker_3084ee8910ac47c7ac1d1c8d5ca57d9f.bindPopup(popup_a6e0bb4751a578a6b747586298d30f43)
         ;
 
         
     
     
-            circle_marker_f14444e1655c0268d6b732195fa67f2c.bindTooltip(
+            circle_marker_3084ee8910ac47c7ac1d1c8d5ca57d9f.bindTooltip(
                 `<div>
                      Gresham — HIGH
                  </div>`,
@@ -429,32 +429,32 @@
             );
         
     
-            var circle_marker_45216945bca07c1ad1dadac2bb25c9d9 = L.circleMarker(
-                [41.88180734026101, -87.71820464651245],
-                {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            var circle_marker_98eb1c0df76a40f91387a83064125101 = L.circleMarker(
+                [41.8826838995, -87.7140625144],
+                {"bubblingMouseEvents": true, "color": "#16a34a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#16a34a", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_42d3aea66262e45ed44070f5b3b63dbd = L.popup({
+        var popup_5e0d994b6eef67176cbf27e7c7a27852 = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_651367dd56210d60ad4651c97f0a5bc9 = $(`<div id="html_651367dd56210d60ad4651c97f0a5bc9" style="width: 100.0%; height: 100.0%;"><b>District:</b> Harrison (11)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 34.81<br><b>Risk Score:</b> 84.63<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_42d3aea66262e45ed44070f5b3b63dbd.setContent(html_651367dd56210d60ad4651c97f0a5bc9);
+                var html_7b5435aa4401271ae09dd6a886b63354 = $(`<div id="html_7b5435aa4401271ae09dd6a886b63354" style="width: 100.0%; height: 100.0%;"><b>District:</b> Harrison (11)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 0.83<br><b>Risk Score:</b> 0.0<br><b>Risk Level:</b> LOW</div>`)[0];
+                popup_5e0d994b6eef67176cbf27e7c7a27852.setContent(html_7b5435aa4401271ae09dd6a886b63354);
             
         
 
-        circle_marker_45216945bca07c1ad1dadac2bb25c9d9.bindPopup(popup_42d3aea66262e45ed44070f5b3b63dbd)
+        circle_marker_98eb1c0df76a40f91387a83064125101.bindPopup(popup_5e0d994b6eef67176cbf27e7c7a27852)
         ;
 
         
     
     
-            circle_marker_45216945bca07c1ad1dadac2bb25c9d9.bindTooltip(
+            circle_marker_98eb1c0df76a40f91387a83064125101.bindTooltip(
                 `<div>
-                     Harrison — HIGH
+                     Harrison — LOW
                  </div>`,
                 {
   "sticky": true,
@@ -462,32 +462,32 @@
             );
         
     
-            var circle_marker_a45d20294c61967b3619f50a3f7aa129 = L.circleMarker(
-                [41.97830967371548, -87.67075778185914],
-                {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            var circle_marker_528de4303171d11677d8b2a7a2c6b639 = L.circleMarker(
+                [41.979737495701755, -87.67049261785965],
+                {"bubblingMouseEvents": true, "color": "#16a34a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#16a34a", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_1de87a7667805f7773354b5286541d57 = L.popup({
+        var popup_1690970bb7888961a0edfa91760564e6 = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_ec9e4dffa492d33542e5fd0f57d7ca25 = $(`<div id="html_ec9e4dffa492d33542e5fd0f57d7ca25" style="width: 100.0%; height: 100.0%;"><b>District:</b> Lincoln (20)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 36.01<br><b>Risk Score:</b> 87.66<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_1de87a7667805f7773354b5286541d57.setContent(html_ec9e4dffa492d33542e5fd0f57d7ca25);
+                var html_7dbe3e6c017486647a02b0f6a4c03291 = $(`<div id="html_7dbe3e6c017486647a02b0f6a4c03291" style="width: 100.0%; height: 100.0%;"><b>District:</b> Lincoln (20)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 1.0<br><b>Risk Score:</b> 0.0<br><b>Risk Level:</b> LOW</div>`)[0];
+                popup_1690970bb7888961a0edfa91760564e6.setContent(html_7dbe3e6c017486647a02b0f6a4c03291);
             
         
 
-        circle_marker_a45d20294c61967b3619f50a3f7aa129.bindPopup(popup_1de87a7667805f7773354b5286541d57)
+        circle_marker_528de4303171d11677d8b2a7a2c6b639.bindPopup(popup_1690970bb7888961a0edfa91760564e6)
         ;
 
         
     
     
-            circle_marker_a45d20294c61967b3619f50a3f7aa129.bindTooltip(
+            circle_marker_528de4303171d11677d8b2a7a2c6b639.bindTooltip(
                 `<div>
-                     Lincoln — HIGH
+                     Lincoln — LOW
                  </div>`,
                 {
   "sticky": true,
@@ -495,32 +495,32 @@
             );
         
     
-            var circle_marker_745446b119e81437df2fd0a01e5a1b13 = L.circleMarker(
-                [41.89844000450402, -87.63083346000919],
-                {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            var circle_marker_61973f390fd5bf9ea499f7e244fceb78 = L.circleMarker(
+                [41.90097738372414, -87.63221809493103],
+                {"bubblingMouseEvents": true, "color": "#eab308", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#eab308", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_d0529bd44407e5828e14deaae746cbe2 = L.popup({
+        var popup_54b9c52370df0f9d961e2c10c93b06c3 = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_2a0886488f45c47278fea367aeb2b7f0 = $(`<div id="html_2a0886488f45c47278fea367aeb2b7f0" style="width: 100.0%; height: 100.0%;"><b>District:</b> Near North (18)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 33.9<br><b>Risk Score:</b> 82.97<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_d0529bd44407e5828e14deaae746cbe2.setContent(html_2a0886488f45c47278fea367aeb2b7f0);
+                var html_96bd4ca4b78dbbda198b36f7325b43a1 = $(`<div id="html_96bd4ca4b78dbbda198b36f7325b43a1" style="width: 100.0%; height: 100.0%;"><b>District:</b> Near North (18)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 1.8<br><b>Risk Score:</b> 54.5<br><b>Risk Level:</b> MEDIUM</div>`)[0];
+                popup_54b9c52370df0f9d961e2c10c93b06c3.setContent(html_96bd4ca4b78dbbda198b36f7325b43a1);
             
         
 
-        circle_marker_745446b119e81437df2fd0a01e5a1b13.bindPopup(popup_d0529bd44407e5828e14deaae746cbe2)
+        circle_marker_61973f390fd5bf9ea499f7e244fceb78.bindPopup(popup_54b9c52370df0f9d961e2c10c93b06c3)
         ;
 
         
     
     
-            circle_marker_745446b119e81437df2fd0a01e5a1b13.bindTooltip(
+            circle_marker_61973f390fd5bf9ea499f7e244fceb78.bindTooltip(
                 `<div>
-                     Near North — HIGH
+                     Near North — MEDIUM
                  </div>`,
                 {
   "sticky": true,
@@ -528,30 +528,30 @@
             );
         
     
-            var circle_marker_57eb0e4845b455c43c3c3f4eeec41d24 = L.circleMarker(
-                [41.87999090755296, -87.66796404000455],
+            var circle_marker_39ab49f20f62a75f8f1b5953e6130f25 = L.circleMarker(
+                [41.88232059578495, -87.66812689802151],
                 {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_88a92f8e96fb580203cb6f2d0c6e9a91 = L.popup({
+        var popup_392ecdf5879cd2af02b40b12aaa41fea = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_92de026ff4f80ddc95dc14afbc9ee107 = $(`<div id="html_92de026ff4f80ddc95dc14afbc9ee107" style="width: 100.0%; height: 100.0%;"><b>District:</b> Near West (12)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 31.68<br><b>Risk Score:</b> 78.43<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_88a92f8e96fb580203cb6f2d0c6e9a91.setContent(html_92de026ff4f80ddc95dc14afbc9ee107);
+                var html_fdd351a35e0b7a909fda6023161d39cf = $(`<div id="html_fdd351a35e0b7a909fda6023161d39cf" style="width: 100.0%; height: 100.0%;"><b>District:</b> Near West (12)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 2.63<br><b>Risk Score:</b> 82.02<br><b>Risk Level:</b> HIGH</div>`)[0];
+                popup_392ecdf5879cd2af02b40b12aaa41fea.setContent(html_fdd351a35e0b7a909fda6023161d39cf);
             
         
 
-        circle_marker_57eb0e4845b455c43c3c3f4eeec41d24.bindPopup(popup_88a92f8e96fb580203cb6f2d0c6e9a91)
+        circle_marker_39ab49f20f62a75f8f1b5953e6130f25.bindPopup(popup_392ecdf5879cd2af02b40b12aaa41fea)
         ;
 
         
     
     
-            circle_marker_57eb0e4845b455c43c3c3f4eeec41d24.bindTooltip(
+            circle_marker_39ab49f20f62a75f8f1b5953e6130f25.bindTooltip(
                 `<div>
                      Near West — HIGH
                  </div>`,
@@ -561,32 +561,32 @@
             );
         
     
-            var circle_marker_84e7a12e06429e170f1e77f9cf70aa24 = L.circleMarker(
-                [41.85255044488605, -87.7123932455628],
-                {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            var circle_marker_895f8e21240c0d2e68d32565d44f0b26 = L.circleMarker(
+                [41.8499101129394, -87.71246170518182],
+                {"bubblingMouseEvents": true, "color": "#16a34a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#16a34a", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_8aca29ed7eabb60207fe3677f60a9290 = L.popup({
+        var popup_401cb04c32a9ccaa998562cffdc97937 = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_0a9d9d2e27cae6ca705ff88c48ee5b00 = $(`<div id="html_0a9d9d2e27cae6ca705ff88c48ee5b00" style="width: 100.0%; height: 100.0%;"><b>District:</b> Ogden (10)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 39.65<br><b>Risk Score:</b> 91.92<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_8aca29ed7eabb60207fe3677f60a9290.setContent(html_0a9d9d2e27cae6ca705ff88c48ee5b00);
+                var html_40b985e6321d54a11bf1ba755d87cbe7 = $(`<div id="html_40b985e6321d54a11bf1ba755d87cbe7" style="width: 100.0%; height: 100.0%;"><b>District:</b> Ogden (10)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 0.83<br><b>Risk Score:</b> 0.0<br><b>Risk Level:</b> LOW</div>`)[0];
+                popup_401cb04c32a9ccaa998562cffdc97937.setContent(html_40b985e6321d54a11bf1ba755d87cbe7);
             
         
 
-        circle_marker_84e7a12e06429e170f1e77f9cf70aa24.bindPopup(popup_8aca29ed7eabb60207fe3677f60a9290)
+        circle_marker_895f8e21240c0d2e68d32565d44f0b26.bindPopup(popup_401cb04c32a9ccaa998562cffdc97937)
         ;
 
         
     
     
-            circle_marker_84e7a12e06429e170f1e77f9cf70aa24.bindTooltip(
+            circle_marker_895f8e21240c0d2e68d32565d44f0b26.bindTooltip(
                 `<div>
-                     Ogden — HIGH
+                     Ogden — LOW
                  </div>`,
                 {
   "sticky": true,
@@ -594,32 +594,32 @@
             );
         
     
-            var circle_marker_432b30f10894ea4a4f51defe88c5dd45 = L.circleMarker(
-                [42.00546771779026, -87.67857412438492],
-                {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            var circle_marker_aac30139e5390dbccb24a931d1cb6bd2 = L.circleMarker(
+                [42.00702403417073, -87.68033629702438],
+                {"bubblingMouseEvents": true, "color": "#16a34a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#16a34a", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_405f4ac879e5e81d431befe34c2be867 = L.popup({
+        var popup_98b0996ac1499e2dfc7c3e933fd64e72 = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_ed9ea9a87b345d329045375074c19f23 = $(`<div id="html_ed9ea9a87b345d329045375074c19f23" style="width: 100.0%; height: 100.0%;"><b>District:</b> Rogers Park (24)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 35.71<br><b>Risk Score:</b> 86.51<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_405f4ac879e5e81d431befe34c2be867.setContent(html_ed9ea9a87b345d329045375074c19f23);
+                var html_a5a527be880293f3e653bee8208ba2e8 = $(`<div id="html_a5a527be880293f3e653bee8208ba2e8" style="width: 100.0%; height: 100.0%;"><b>District:</b> Rogers Park (24)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 0.82<br><b>Risk Score:</b> 0.0<br><b>Risk Level:</b> LOW</div>`)[0];
+                popup_98b0996ac1499e2dfc7c3e933fd64e72.setContent(html_a5a527be880293f3e653bee8208ba2e8);
             
         
 
-        circle_marker_432b30f10894ea4a4f51defe88c5dd45.bindPopup(popup_405f4ac879e5e81d431befe34c2be867)
+        circle_marker_aac30139e5390dbccb24a931d1cb6bd2.bindPopup(popup_98b0996ac1499e2dfc7c3e933fd64e72)
         ;
 
         
     
     
-            circle_marker_432b30f10894ea4a4f51defe88c5dd45.bindTooltip(
+            circle_marker_aac30139e5390dbccb24a931d1cb6bd2.bindTooltip(
                 `<div>
-                     Rogers Park — HIGH
+                     Rogers Park — LOW
                  </div>`,
                 {
   "sticky": true,
@@ -627,32 +627,32 @@
             );
         
     
-            var circle_marker_124a9137003e54852fe21e9318c0ecae = L.circleMarker(
-                [41.731416075302405, -87.56316712280952],
-                {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            var circle_marker_2292c5b652615f4fee027d727e52209f = L.circleMarker(
+                [41.72636884569388, -87.56327420293879],
+                {"bubblingMouseEvents": true, "color": "#eab308", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#eab308", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_ee5702207f30ea2ae488845aca33ebfc = L.popup({
+        var popup_cf4fe860e7af12762c61795b1e756666 = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_460b116a44acea40705345b7384df51f = $(`<div id="html_460b116a44acea40705345b7384df51f" style="width: 100.0%; height: 100.0%;"><b>District:</b> South Chicago (4)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 42.99<br><b>Risk Score:</b> 94.52<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_ee5702207f30ea2ae488845aca33ebfc.setContent(html_460b116a44acea40705345b7384df51f);
+                var html_5397753f88451fb194a09ca35e44e0ff = $(`<div id="html_5397753f88451fb194a09ca35e44e0ff" style="width: 100.0%; height: 100.0%;"><b>District:</b> South Chicago (4)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 1.09<br><b>Risk Score:</b> 54.5<br><b>Risk Level:</b> MEDIUM</div>`)[0];
+                popup_cf4fe860e7af12762c61795b1e756666.setContent(html_5397753f88451fb194a09ca35e44e0ff);
             
         
 
-        circle_marker_124a9137003e54852fe21e9318c0ecae.bindPopup(popup_ee5702207f30ea2ae488845aca33ebfc)
+        circle_marker_2292c5b652615f4fee027d727e52209f.bindPopup(popup_cf4fe860e7af12762c61795b1e756666)
         ;
 
         
     
     
-            circle_marker_124a9137003e54852fe21e9318c0ecae.bindTooltip(
+            circle_marker_2292c5b652615f4fee027d727e52209f.bindTooltip(
                 `<div>
-                     South Chicago — HIGH
+                     South Chicago — MEDIUM
                  </div>`,
                 {
   "sticky": true,
@@ -660,30 +660,30 @@
             );
         
     
-            var circle_marker_64c3c89342a01b04460d6117e10d9cb3 = L.circleMarker(
-                [41.947077859055334, -87.65904029424054],
+            var circle_marker_0396f0494c2ebd7c543fda5857772da0 = L.circleMarker(
+                [41.945732785846154, -87.65763829193847],
                 {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_b3605e88d7dbf1334abd207eb4db99d2 = L.popup({
+        var popup_dcd1815b0355280857f29b5a37dc7594 = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_3df105de7fb3f23c11d1341e5cd9ce0e = $(`<div id="html_3df105de7fb3f23c11d1341e5cd9ce0e" style="width: 100.0%; height: 100.0%;"><b>District:</b> Town Hall (19)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 31.38<br><b>Risk Score:</b> 78.43<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_b3605e88d7dbf1334abd207eb4db99d2.setContent(html_3df105de7fb3f23c11d1341e5cd9ce0e);
+                var html_d98a4612969bb7dca9dbcf77dcd7592b = $(`<div id="html_d98a4612969bb7dca9dbcf77dcd7592b" style="width: 100.0%; height: 100.0%;"><b>District:</b> Town Hall (19)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 2.03<br><b>Risk Score:</b> 82.02<br><b>Risk Level:</b> HIGH</div>`)[0];
+                popup_dcd1815b0355280857f29b5a37dc7594.setContent(html_d98a4612969bb7dca9dbcf77dcd7592b);
             
         
 
-        circle_marker_64c3c89342a01b04460d6117e10d9cb3.bindPopup(popup_b3605e88d7dbf1334abd207eb4db99d2)
+        circle_marker_0396f0494c2ebd7c543fda5857772da0.bindPopup(popup_dcd1815b0355280857f29b5a37dc7594)
         ;
 
         
     
     
-            circle_marker_64c3c89342a01b04460d6117e10d9cb3.bindTooltip(
+            circle_marker_0396f0494c2ebd7c543fda5857772da0.bindTooltip(
                 `<div>
                      Town Hall — HIGH
                  </div>`,
@@ -693,30 +693,30 @@
             );
         
     
-            var circle_marker_ae99c35b54cd3c8255d8e8b341e929b1 = L.circleMarker(
-                [41.81016143974368, -87.6094670054715],
+            var circle_marker_a0dbf921c3ec97d2210d75425b01b2e0 = L.circleMarker(
+                [41.808784026013335, -87.60416931958666],
                 {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_fe7379ae3c9b18274406a8138ed2a53e);
+            ).addTo(map_5834166fadc2ea455dd3e2ea99b9aba4);
         
     
-        var popup_75c4110506b8f1979c69d26c2cded81b = L.popup({
+        var popup_447714e2ea467ff4816b50b764a9b77b = L.popup({
   "maxWidth": 280,
 });
 
         
             
-                var html_d82e796d451f00daca539e63126442cb = $(`<div id="html_d82e796d451f00daca539e63126442cb" style="width: 100.0%; height: 100.0%;"><b>District:</b> Wentworth (2)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2063<br><b>Expected Crime Count:</b> 30.17<br><b>Risk Score:</b> 74.6<br><b>Risk Level:</b> HIGH</div>`)[0];
-                popup_75c4110506b8f1979c69d26c2cded81b.setContent(html_d82e796d451f00daca539e63126442cb);
+                var html_342c5897cfa28f9606a2d3f1c5874838 = $(`<div id="html_342c5897cfa28f9606a2d3f1c5874838" style="width: 100.0%; height: 100.0%;"><b>District:</b> Wentworth (2)<br><b>Prediction Month:</b> January<br><b>Prediction Year:</b> 2027<br><b>Expected Crime Count:</b> 2.78<br><b>Risk Score:</b> 82.02<br><b>Risk Level:</b> HIGH</div>`)[0];
+                popup_447714e2ea467ff4816b50b764a9b77b.setContent(html_342c5897cfa28f9606a2d3f1c5874838);
             
         
 
-        circle_marker_ae99c35b54cd3c8255d8e8b341e929b1.bindPopup(popup_75c4110506b8f1979c69d26c2cded81b)
+        circle_marker_a0dbf921c3ec97d2210d75425b01b2e0.bindPopup(popup_447714e2ea467ff4816b50b764a9b77b)
         ;
 
         
     
     
-            circle_marker_ae99c35b54cd3c8255d8e8b341e929b1.bindTooltip(
+            circle_marker_a0dbf921c3ec97d2210d75425b01b2e0.bindTooltip(
                 `<div>
                      Wentworth — HIGH
                  </div>`,

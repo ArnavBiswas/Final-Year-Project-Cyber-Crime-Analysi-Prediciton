@@ -5,7 +5,14 @@ import pandas as pd
 from flask import Flask, jsonify, request, send_from_directory
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier, VotingClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report, f1_score, precision_score, recall_score
+from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+    f1_score,
+    precision_score,
+    recall_score,
+)
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neural_network import MLPClassifier
@@ -443,6 +450,7 @@ def train_model():
     comparison_rows = []
     selected_result = None
     prediction_map = []
+    confusion_matrix_data = {"labels": [], "matrix": []}
 
     for name, model in model_map.items():
         try:
@@ -477,12 +485,19 @@ def train_model():
             map_df["Predicted_District"] = le.inverse_transform(pred_all)
             map_df["Is_Correct"] = map_df["Predicted_District"] == map_df["District_Name"]
 
+            cm = confusion_matrix(y_test, y_pred, labels=list(range(len(le.classes_))))
+            confusion_matrix_data = {
+                "labels": [str(label) for label in le.classes_],
+                "matrix": cm.astype(int).tolist(),
+            }
+
             selected_result = {
                 "model": name,
                 "accuracy": row["Accuracy"],
                 "precision": row["Precision"],
                 "recall": row["Recall"],
                 "f1": row["F1"],
+                "confusionMatrix": confusion_matrix_data,
                 "report": [
                     {
                         "District": district,
@@ -510,6 +525,7 @@ def train_model():
                 "report": [],
             },
             "comparison": comparison_rows,
+            "confusionMatrix": confusion_matrix_data,
             "predictionMap": prediction_map,
             "models": MODEL_NAMES,
         }

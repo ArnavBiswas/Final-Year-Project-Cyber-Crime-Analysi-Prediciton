@@ -11,6 +11,93 @@ const DEFAULT_MODELS = [
   "Voting Ensemble (LR+SVM+DT)",
 ];
 
+const CARD_DETAILS = {
+  statOriginalRows:
+    "Total records in the uploaded raw file before any cleaning. This is the starting volume of the dataset and helps you see how much data was supplied.",
+  statCleanRows:
+    "Rows that remain after removing duplicates, invalid coordinates, blank crime descriptions, and other unusable records. All dashboard pages use this cleaned dataset.",
+  statCrimeTypes:
+    "Number of distinct cybercrime categories (Description field) found in the cleaned data. Each category can be analyzed and modeled separately.",
+  statRowsRemoved:
+    "Records dropped during cleaning because of missing fields, invalid dates, out-of-range coordinates, duplicate rows, or empty descriptions.",
+  statIssues:
+    "Sum of all detected data-quality issue counts from the cleaning report (nulls, invalid values, duplicates, etc.).",
+  crimeCategoryShare:
+    "Doughnut chart showing the proportion of each major cybercrime category in the cleaned dataset. Larger slices indicate categories that dominate the overall case load.",
+  topCrimeCategories:
+    "Bar chart ranking crime categories by total incident count. Use this to identify which cybercrime types are most frequent in Chicago for your uploaded period.",
+  cleanedPreview:
+    "Preview of the first usable rows after cleaning, including normalized dates, coordinates, district names, and crime descriptions. Confirms how the pipeline transformed the raw upload.",
+  districtReference:
+    "Lookup table mapping Chicago Police district numbers to official district names. Use it when reading maps, tables, and model outputs that reference districts.",
+  analysisRecords:
+    "Number of cleaned incidents matching the selected crime category (and hour filter when applied). This is the sample size behind the charts and maps on this page.",
+  analysisPeakHour:
+    "Hour of the day (0–23) with the highest incident count for the selected crime. Useful for scheduling patrols or awareness campaigns.",
+  analysisViewedHour:
+    "Hour currently selected for the time-wise spatial view. Leave the hour field empty to use the peak hour automatically.",
+  analysisMapPoints:
+    "Incident locations plotted on the map for the selected crime. Each marker shows where a reported case occurred in the cleaned dataset.",
+  highestRiskDistrict:
+    "District with the largest share of incidents for the selected crime relative to all districts. Risk percentage reflects its contribution to the category total.",
+  districtWiseChart:
+    "Horizontal bar chart of incident counts by police district. Taller bars identify districts that report the most cases for the chosen crime type.",
+  spatialHeatmap:
+    "Geospatial heatmap of incident coordinates. Warmer colors show where the selected cybercrime concentrates across Chicago.",
+  temporalChart:
+    "Hourly distribution of incidents across a 24-hour clock. Peaks reveal when offenders or victims are most likely to report this crime type.",
+  hourSpatialHeatmap:
+    "Geospatial heatmap limited to the selected hour. Compare with the full-day view to see how hotspots shift through the day.",
+  hourDistrictTable:
+    "District-level counts for the selected hour only. Shows which districts concentrate activity during that specific time window.",
+  mlAccuracy:
+    "Share of test-set incidents where the model predicted the correct police district. Higher accuracy means better district-level classification.",
+  mlPrecision:
+    "Weighted precision across districts: how often predicted districts are correct when the model makes a positive district assignment.",
+  mlRecall:
+    "Weighted recall across districts: how well the model finds the true district among all actual cases in the test split.",
+  mlF1:
+    "Weighted F1 score balancing precision and recall. Useful when district class sizes are imbalanced.",
+  mlSelectedModel:
+    "Classifier trained on latitude/longitude bins, time features, and weekend flag to predict District_Name for the selected crime category.",
+  mlCrimeCategory:
+    "Cybercrime type used to filter training data. Models are trained only on incidents labeled with this description.",
+  mlModelComparison:
+    "Compares all implemented classifiers on the same train/test split using accuracy, precision, recall, and F1. Helps you pick the best algorithm for this crime type.",
+  mlDistrictReport:
+    "Per-district precision, recall, F1, and support for the selected model. Support is the number of true test samples in each district class.",
+  mlConfusionMatrix:
+    "Rows are actual districts and columns are predicted districts. Diagonal cells are correct predictions; off-diagonal cells show confusion between district pairs.",
+  mlPredictionHeatmap:
+    "Heatmap of incident locations by prediction outcome. Warmer areas highlight incorrect district predictions; cooler greens indicate correct predictions.",
+  forecastCrime:
+    "Cybercrime category used to train monthly regression models and generate the district forecast shown on this page.",
+  forecastDistrict:
+    "Chicago police district selected for the prediction target month and year.",
+  forecastPredicted:
+    "Expected number of incidents in the target month for the selected district and crime type, from the active regression model.",
+  forecastActiveModel:
+    "Regression model currently driving the forecast, map, and trend chart. Click a row in the evaluation table to switch models.",
+  forecastRiskScore:
+    "Numeric risk score derived from predicted crime volume relative to dynamic LOW/MEDIUM/HIGH thresholds for this crime type.",
+  forecastRiskLevel:
+    "Categorical risk band (LOW, MEDIUM, HIGH) based on predicted counts and data-driven thresholds.",
+  forecastBestModel:
+    "Model with the highest R² on the evaluation split for this crime category. R² measures how well the model explains variance in monthly counts.",
+  forecastActiveR2:
+    "R² coefficient of determination for the active regression model. Closer to 1 means better fit on historical monthly district data.",
+  forecastSummary:
+    "Narrative summary of the forecast target, expected crime count, risk score, and active model for the selected district and month.",
+  regressionEvaluation:
+    "MAE, RMSE, and R² for each regression model on the same crime-specific dataset. Click a row to activate that model for predictions and charts.",
+  forecastTrend:
+    "Line chart comparing historical actual monthly counts with model-predicted values for the selected district and crime type.",
+  futureHotspotHeatmap:
+    "Map of predicted future risk across districts. Green markers = LOW, yellow = MEDIUM, red = HIGH expected risk for the target month.",
+  allDistrictPredictions:
+    "Table of regression forecasts and risk levels for every police district in the dataset for the selected target month and year.",
+};
+
 function formatNumber(value) {
   return new Intl.NumberFormat("en-IN").format(value || 0);
 }
@@ -55,11 +142,218 @@ function shortModelName(name) {
   return names[name] || name;
 }
 
-function Stat({ label, value }) {
+function CardModal({ title, children, onClose, wide = false }) {
+  useEffect(() => {
+    function onKey(event) {
+      if (event.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [onClose]);
+
   return (
-    <div className="card stat">
-      <span className="muted">{label}</span>
-      <strong>{value}</strong>
+    <div className="card-modal-backdrop" onClick={onClose} role="presentation">
+      <div
+        className={`card-modal${wide ? " card-modal--wide" : ""}`}
+        onClick={(event) => event.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? "card-modal-title" : undefined}
+      >
+        <div className="card-modal-header">
+          <div className="card-modal-header-main">
+            <span className="card-modal-kicker">Dashboard insight</span>
+            {title && <h3 id="card-modal-title">{title}</h3>}
+          </div>
+          <button type="button" className="card-modal-close" onClick={onClose} aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+        <div className="card-modal-body">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+function InfoCard({
+  title,
+  summary,
+  detail,
+  children,
+  className = "",
+  variant = "default",
+  interactive = false,
+  modalWide = false,
+}) {
+  const [open, setOpen] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
+  const hasDetail = Boolean(detail);
+
+  function showModal() {
+    if (!hasDetail) return;
+    setModalKey((value) => value + 1);
+    setOpen(true);
+  }
+
+  function openModal(event) {
+    if (!hasDetail) return;
+    if (event?.target?.closest?.(".info-card-skip, button, a, input, select, textarea, label, .map, .chart, .table-wrap, table")) {
+      return;
+    }
+    showModal();
+  }
+
+  const clickable = hasDetail && !interactive;
+  const modalPreview =
+    children ||
+    (variant === "stat" ? (
+      <>
+        <span className="muted">{title}</span>
+        {typeof summary === "string" || typeof summary === "number" ? (
+          <strong>{summary}</strong>
+        ) : (
+          <div className="stat-custom-value">{summary}</div>
+        )}
+      </>
+    ) : null);
+
+  return (
+    <>
+      <div
+        className={`card info-card${clickable ? " info-card--clickable" : ""} ${className}`}
+        onClick={clickable ? openModal : undefined}
+        onKeyDown={
+          clickable
+            ? (event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  openModal(event);
+                }
+              }
+            : undefined
+        }
+        role={clickable ? "button" : undefined}
+        tabIndex={clickable ? 0 : undefined}
+      >
+        {variant === "stat" ? (
+          <>
+            <span className="muted">{title}</span>
+            {typeof summary === "string" || typeof summary === "number" ? (
+              <strong>{summary}</strong>
+            ) : (
+              <div className="stat-custom-value">{summary}</div>
+            )}
+          </>
+        ) : (
+          <>
+            {title && <h3>{title}</h3>}
+            {summary && <p className="muted card-summary">{summary}</p>}
+          </>
+        )}
+        {children}
+        {hasDetail && interactive && (
+          <button
+            type="button"
+            className="card-info-btn info-card-skip"
+            onClick={(event) => {
+              event.stopPropagation();
+              showModal();
+            }}
+          >
+            Expand
+          </button>
+        )}
+        {hasDetail && !interactive && <span className="card-more-hint">Click to expand</span>}
+      </div>
+      {open && (
+        <CardModal title={title} wide={modalWide || interactive} onClose={() => setOpen(false)}>
+          {modalPreview && (
+            <section className="card-modal-section card-modal-section--preview" aria-label="Preview">
+              <div className="card-modal-section-head">
+                <span className="card-modal-section-badge">Preview</span>
+              </div>
+              <div
+                key={modalKey}
+                className={`card-modal-preview info-card-skip${variant === "stat" ? " card-modal-preview--stat" : ""}`}
+              >
+                {modalPreview}
+              </div>
+            </section>
+          )}
+          <section className="card-modal-section card-modal-section--about" aria-label="About">
+            <div className="card-modal-section-head">
+              <span className="card-modal-section-badge card-modal-section-badge--about">About this view</span>
+            </div>
+            <div className="card-modal-description">
+              {typeof detail === "string" ? <p>{detail}</p> : detail}
+            </div>
+          </section>
+        </CardModal>
+      )}
+    </>
+  );
+}
+
+function Stat({ label, value, detail }) {
+  return (
+    <InfoCard
+      variant="stat"
+      className="stat"
+      title={label}
+      summary={value}
+      detail={detail}
+    />
+  );
+}
+
+function ConfusionMatrixView({ labels, matrix }) {
+  if (!matrix?.length || !labels?.length) {
+    return <p className="muted">Confusion matrix will appear after a successful model training run.</p>;
+  }
+
+  const maxVal = Math.max(...matrix.flat(), 1);
+
+  return (
+    <div className="table-wrap confusion-matrix-wrap">
+      <table className="confusion-matrix">
+        <thead>
+          <tr>
+            <th>Actual \ Predicted</th>
+            {labels.map((label) => (
+              <th key={label} title={label}>
+                {label.length > 14 ? `${label.slice(0, 13)}…` : label}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {matrix.map((row, rowIndex) => (
+            <tr key={labels[rowIndex]}>
+              <th title={labels[rowIndex]}>
+                {labels[rowIndex].length > 14 ? `${labels[rowIndex].slice(0, 13)}…` : labels[rowIndex]}
+              </th>
+              {row.map((value, colIndex) => (
+                <td
+                  key={`${rowIndex}-${colIndex}`}
+                  style={{
+                    backgroundColor: `color-mix(in srgb, var(--blue) ${Math.round(12 + (value / maxVal) * 68)}%, transparent)`,
+                  }}
+                  title={`Actual: ${labels[rowIndex]}, Predicted: ${labels[colIndex]}, Count: ${value}`}
+                >
+                  {value}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -209,10 +503,18 @@ function ChartView({ type, labels, datasets, indexAxis = "x", xLabel = "", yLabe
   if (type === "doughnut" || type === "pie") {
     const dataset = datasets[0];
     const total = dataset.data.reduce((sum, value) => sum + value, 0) || 1;
+    const pieCx = 180;
+    const pieCy = 150;
+    const pieOuter = 132;
+    const pieInner = type === "doughnut" ? 64 : 0;
+    const pieLabelRadius = pieInner === 0 ? pieOuter * 0.62 : (pieOuter + pieInner) / 2;
+
     const slices = labels.map((label, index) => {
       const value = Number(dataset.data[index] || 0);
       const start = dataset.data.slice(0, index).reduce((sum, item) => sum + Number(item || 0), 0);
       const end = start + value;
+      const midAngle = ((start + value / 2) / total) * Math.PI * 2 - Math.PI / 2;
+      const arcSpan = (value / total) * Math.PI * 2;
       return {
         label,
         value,
@@ -220,7 +522,8 @@ function ChartView({ type, labels, datasets, indexAxis = "x", xLabel = "", yLabe
         start,
         end,
         pct: (value / total) * 100,
-        midAngle: ((start + value / 2) / total) * Math.PI * 2 - Math.PI / 2,
+        midAngle,
+        arcSpan,
       };
     });
 
@@ -228,41 +531,31 @@ function ChartView({ type, labels, datasets, indexAxis = "x", xLabel = "", yLabe
       const start = (slice.start / total) * Math.PI * 2 - Math.PI / 2;
       const end = (slice.end / total) * Math.PI * 2 - Math.PI / 2;
       const largeArc = end - start > Math.PI ? 1 : 0;
-      const cx = 180;
-      const cy = 150;
-      const outer = 132;
-      const inner = type === "doughnut" ? 64 : 0;
-      const sx = cx + outer * Math.cos(start);
-      const sy = cy + outer * Math.sin(start);
-      const ex = cx + outer * Math.cos(end);
-      const ey = cy + outer * Math.sin(end);
-      const isx = cx + inner * Math.cos(end);
-      const isy = cy + inner * Math.sin(end);
-      const iex = cx + inner * Math.cos(start);
-      const iey = cy + inner * Math.sin(start);
+      const sx = pieCx + pieOuter * Math.cos(start);
+      const sy = pieCy + pieOuter * Math.sin(start);
+      const ex = pieCx + pieOuter * Math.cos(end);
+      const ey = pieCy + pieOuter * Math.sin(end);
+      const isx = pieCx + pieInner * Math.cos(end);
+      const isy = pieCy + pieInner * Math.sin(end);
+      const iex = pieCx + pieInner * Math.cos(start);
+      const iey = pieCy + pieInner * Math.sin(start);
 
-      if (inner === 0) {
-        return `M ${cx} ${cy} L ${sx} ${sy} A ${outer} ${outer} 0 ${largeArc} 1 ${ex} ${ey} Z`;
+      if (pieInner === 0) {
+        return `M ${pieCx} ${pieCy} L ${sx} ${sy} A ${pieOuter} ${pieOuter} 0 ${largeArc} 1 ${ex} ${ey} Z`;
       }
 
-      return `M ${sx} ${sy} A ${outer} ${outer} 0 ${largeArc} 1 ${ex} ${ey} L ${isx} ${isy} A ${inner} ${inner} 0 ${largeArc} 0 ${iex} ${iey} Z`;
+      return `M ${sx} ${sy} A ${pieOuter} ${pieOuter} 0 ${largeArc} 1 ${ex} ${ey} L ${isx} ${isy} A ${pieInner} ${pieInner} 0 ${largeArc} 0 ${iex} ${iey} Z`;
     }
 
-    function sliceLabelPosition(slice) {
-      const cx = 180;
-      const cy = 150;
-      const radius = type === "doughnut" ? 98 : 88;
-      return {
-        x: cx + radius * Math.cos(slice.midAngle),
-        y: cy + radius * Math.sin(slice.midAngle),
-      };
+    function sliceShowsLabel(slice) {
+      return slice.pct >= 7 && slice.arcSpan >= 0.38;
     }
 
     return (
       <div className="chart-shell">
         {tooltip && <div className="hover-tooltip" style={{ left: tooltip.x, top: tooltip.y }}>{tooltip.text}</div>}
         <div className="svg-chart pie-layout">
-        <svg viewBox="0 0 360 300" role="img">
+        <svg viewBox="0 0 360 300" preserveAspectRatio="xMidYMid meet" role="img" className="pie-donut-svg">
           {slices.map((slice) => (
             <path
               className="chart-hotspot"
@@ -278,19 +571,20 @@ function ChartView({ type, labels, datasets, indexAxis = "x", xLabel = "", yLabe
               onMouseLeave={hideTooltip}
             />
           ))}
-          {slices.filter((slice) => slice.pct >= 4).map((slice) => {
-            const pos = sliceLabelPosition(slice);
+          {slices.filter(sliceShowsLabel).map((slice) => {
+            const x = pieCx + pieLabelRadius * Math.cos(slice.midAngle);
+            const y = pieCy + pieLabelRadius * Math.sin(slice.midAngle);
+            const valueLabel = formatChartValue(slice.value, valueDecimals);
             return (
-              <text
+              <g
                 key={`${slice.label}-value`}
-                x={pos.x}
-                y={pos.y}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                className="chart-value-label pie-slice-label"
+                className="pie-slice-label-group"
+                transform={`translate(${x}, ${y})`}
               >
-                {formatChartValue(slice.value, valueDecimals)}
-              </text>
+                <text textAnchor="middle" dominantBaseline="central" className="pie-slice-label">
+                  {valueLabel}
+                </text>
+              </g>
             );
           })}
         </svg>
@@ -531,7 +825,28 @@ function riskColor(level) {
   return "#16a34a";
 }
 
-function MapView({ points, color = "#0f766e" }) {
+function heatIntensity(point) {
+  if (point.Risk_Level === "HIGH") return 1;
+  if (point.Risk_Level === "MEDIUM") return 0.72;
+  if (point.Risk_Level === "LOW") return 0.45;
+  if (point.Is_Correct === false) return 1;
+  if (point.Is_Correct === true) return 0.42;
+  if (point.Risk_Score !== undefined && point.Risk_Score !== null) {
+    const score = Number(point.Risk_Score);
+    if (Number.isFinite(score)) return Math.min(Math.max(score / 100, 0.3), 1);
+  }
+  return 0.62;
+}
+
+const HEAT_GRADIENT = {
+  0.2: "#16a34a",
+  0.45: "#84cc16",
+  0.65: "#eab308",
+  0.82: "#f97316",
+  1.0: "#dc2626",
+};
+
+function MapView({ points, color = "#0f766e", heatmap = true }) {
   const nodeRef = useRef(null);
   const mapRef = useRef(null);
   const tileRef = useRef(null);
@@ -548,52 +863,78 @@ function MapView({ points, color = "#0f766e" }) {
       tileRef.current.remove();
     }
 
-    tileRef.current = L.tileLayer(
-      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      {
-        attribution: "&copy; OpenStreetMap contributors",
-      }
-    ).addTo(mapRef.current);
+    tileRef.current = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(mapRef.current);
 
     if (layerRef.current) {
-      layerRef.current.remove();
+      mapRef.current.removeLayer(layerRef.current);
+      layerRef.current = null;
     }
 
-    const valid = (points || []).filter((point) => point.Latitude && point.Longitude);
-    layerRef.current = L.layerGroup().addTo(mapRef.current);
+    const valid = (points || []).filter((point) => point.Latitude && point.Longitude).slice(0, 2000);
+    const useHeat = heatmap && typeof L.heatLayer === "function";
 
-    valid.slice(0, 900).forEach((point) => {
-      const markerColor = point.Risk_Level ? riskColor(point.Risk_Level) : typeof color === "function" ? color(point) : color;
-      const tooltipParts = [
-        point.District_Name ? `District: ${point.District_Name}${point.District ? ` (${point.District})` : ""}` : null,
-        point.Prediction_Month ? `Prediction Month: ${point.Prediction_Month}` : null,
-        point.Prediction_Year ? `Prediction Year: ${point.Prediction_Year}` : null,
-        point.Expected_Crime_Count !== undefined ? `Expected Crime Count: ${point.Expected_Crime_Count}` : null,
-        point.Risk_Score !== undefined ? `Risk Score: ${point.Risk_Score}` : null,
-        point.Risk_Level ? `Risk Level: ${point.Risk_Level}` : null,
-        point.Predicted_District ? `Predicted: ${point.Predicted_District}` : null,
-        point.Is_Correct !== undefined ? `Status: ${point.Is_Correct ? "Correct" : "Wrong"}` : null,
-        point.hour !== undefined ? `Hour: ${point.hour}:00` : null,
-      ].filter(Boolean);
+    if (useHeat && valid.length) {
+      const heatData = valid.map((point) => [point.Latitude, point.Longitude, heatIntensity(point)]);
+      layerRef.current = L.heatLayer(heatData, {
+        radius: 26,
+        blur: 20,
+        maxZoom: 17,
+        minOpacity: 0.38,
+        gradient: HEAT_GRADIENT,
+      }).addTo(mapRef.current);
+    } else {
+      layerRef.current = L.layerGroup().addTo(mapRef.current);
+      valid.slice(0, 900).forEach((point) => {
+        const markerColor = point.Risk_Level
+          ? riskColor(point.Risk_Level)
+          : typeof color === "function"
+            ? color(point)
+            : color;
+        const tooltipParts = [
+          point.District_Name ? `District: ${point.District_Name}${point.District ? ` (${point.District})` : ""}` : null,
+          point.Prediction_Month ? `Prediction Month: ${point.Prediction_Month}` : null,
+          point.Prediction_Year ? `Prediction Year: ${point.Prediction_Year}` : null,
+          point.Expected_Crime_Count !== undefined ? `Expected Crime Count: ${point.Expected_Crime_Count}` : null,
+          point.Risk_Score !== undefined ? `Risk Score: ${point.Risk_Score}` : null,
+          point.Risk_Level ? `Risk Level: ${point.Risk_Level}` : null,
+          point.Predicted_District ? `Predicted: ${point.Predicted_District}` : null,
+          point.Is_Correct !== undefined ? `Status: ${point.Is_Correct ? "Correct" : "Wrong"}` : null,
+          point.hour !== undefined ? `Hour: ${point.hour}:00` : null,
+        ].filter(Boolean);
 
-      L.circleMarker([point.Latitude, point.Longitude], {
-        radius: point.Risk_Level ? 10 : 7,
-        color: markerColor,
-        fillColor: markerColor,
-        fillOpacity: 0.75,
-        weight: 1,
-      })
-        .bindTooltip(tooltipParts.join("<br>"), { sticky: true, direction: "top", opacity: 0.95 })
-        .addTo(layerRef.current);
-    });
+        L.circleMarker([point.Latitude, point.Longitude], {
+          radius: point.Risk_Level ? 10 : 7,
+          color: markerColor,
+          fillColor: markerColor,
+          fillOpacity: 0.75,
+          weight: 1,
+        })
+          .bindTooltip(tooltipParts.join("<br>"), { sticky: true, direction: "top", opacity: 0.95 })
+          .addTo(layerRef.current);
+      });
+    }
 
     if (valid.length) {
-      const bounds = L.latLngBounds(valid.slice(0, 900).map((point) => [point.Latitude, point.Longitude]));
+      const bounds = L.latLngBounds(valid.map((point) => [point.Latitude, point.Longitude]));
       mapRef.current.fitBounds(bounds, { padding: [18, 18] });
     }
-  }, [points, color]);
 
-  return <div className="map" ref={nodeRef} />;
+    const resizeTimers = [80, 250].map((delay) => setTimeout(() => mapRef.current?.invalidateSize(), delay));
+    return () => resizeTimers.forEach(clearTimeout);
+  }, [points, color, heatmap]);
+
+  return (
+    <div className="map-wrap info-card-skip">
+      {heatmap && (
+        <p className="muted map-heatmap-note">
+          Heatmap density — cooler greens indicate lower concentration; yellow and red indicate stronger hotspots.
+        </p>
+      )}
+      <div className="map" ref={nodeRef} />
+    </div>
+  );
 }
 
 function DataTable({ rows }) {
@@ -639,15 +980,23 @@ function CleaningReport({ cleaning }) {
       description="The uploaded raw file is inspected for missing values, invalid dates, invalid coordinates, duplicate rows, placeholder times, and unusable district values before analysis."
     >
       <div className="grid cleaning-grid">
-        <Stat label="Original rows" value={formatNumber(cleaning.originalRows)} />
-        <Stat label="Clean usable rows" value={formatNumber(cleaning.cleanRows)} />
-        <Stat label="Rows removed" value={formatNumber(cleaning.removedRows)} />
-        <Stat label="Issues detected" value={formatNumber(issueRows.reduce((sum, row) => sum + row.Count, 0))} />
+        <Stat label="Original rows" value={formatNumber(cleaning.originalRows)} detail={CARD_DETAILS.statOriginalRows} />
+        <Stat label="Clean usable rows" value={formatNumber(cleaning.cleanRows)} detail={CARD_DETAILS.statCleanRows} />
+        <Stat label="Rows removed" value={formatNumber(cleaning.removedRows)} detail={CARD_DETAILS.statRowsRemoved} />
+        <Stat
+          label="Issues detected"
+          value={formatNumber(issueRows.reduce((sum, row) => sum + row.Count, 0))}
+          detail={CARD_DETAILS.statIssues}
+        />
       </div>
-      <div className="card compact-table-card">
-        <h3>Detected Data Quality Issues</h3>
+      <InfoCard
+        className="compact-table-card"
+        title="Detected Data Quality Issues"
+        detail="Each row lists a data-quality problem found in the raw upload (missing values, invalid coordinates, duplicates, etc.) and how many records were affected before cleaning."
+        interactive
+      >
         {issueRows.length ? <DataTable rows={issueRows} /> : <p className="muted">No major data quality issues were detected.</p>}
-      </div>
+      </InfoCard>
     </Section>
   );
 }
@@ -688,10 +1037,10 @@ function Overview({ data }) {
   return (
     <div className="grid">
       <div className="grid stats">
-        <Stat label="Original rows" value={formatNumber(data.cleaning?.originalRows || data.rows)} />
-        <Stat label="Clean rows" value={formatNumber(data.rows)} />
-        <Stat label="Crime categories" value={formatNumber(data.summary.crimeTypes)} />
-        <Stat label="Rows removed" value={formatNumber(data.cleaning?.removedRows || 0)} />
+        <Stat label="Original rows" value={formatNumber(data.cleaning?.originalRows || data.rows)} detail={CARD_DETAILS.statOriginalRows} />
+        <Stat label="Clean rows" value={formatNumber(data.rows)} detail={CARD_DETAILS.statCleanRows} />
+        <Stat label="Crime categories" value={formatNumber(data.summary.crimeTypes)} detail={CARD_DETAILS.statCrimeTypes} />
+        <Stat label="Rows removed" value={formatNumber(data.cleaning?.removedRows || 0)} detail={CARD_DETAILS.statRowsRemoved} />
       </div>
 
       <CleaningReport cleaning={data.cleaning} />
@@ -702,15 +1051,13 @@ function Overview({ data }) {
         description="This section summarizes how cybercrime cases are distributed across major crime categories in the cleaned dataset."
       >
         <div className="grid overview-grid">
-          <div className="card">
-            <h3>Crime Category Share</h3>
+          <InfoCard title="Crime Category Share" detail={CARD_DETAILS.crimeCategoryShare} interactive>
             <div className="chart pie-chart">
               <PieChartView rows={data.charts.descriptionCounts} />
             </div>
-          </div>
+          </InfoCard>
 
-          <div className="card">
-            <h3>Top Crime Categories</h3>
+          <InfoCard title="Top Crime Categories" detail={CARD_DETAILS.topCrimeCategories} interactive>
             <div className="chart">
               <ChartView
                 type="bar"
@@ -720,7 +1067,7 @@ function Overview({ data }) {
                 yLabel="Number of cases"
               />
             </div>
-          </div>
+          </InfoCard>
         </div>
       </Section>
 
@@ -729,13 +1076,13 @@ function Overview({ data }) {
         title="Cleaned Dataset Overview"
         description="A compact preview of the cleaned and usable records generated from the uploaded raw dataset."
       >
-        <div className="card">
+        <InfoCard title="Cleaned Dataset Preview" detail={CARD_DETAILS.cleanedPreview} interactive>
           <p className="muted table-note">
             {data.raw.columns.length} columns detected after cleaning. Date range: {data.summary.dateMin || "-"} to {data.summary.dateMax || "-"}.
             Showing the first 20 usable rows.
           </p>
           <DataTable rows={data.raw.preview} />
-        </div>
+        </InfoCard>
       </Section>
 
       <Section
@@ -743,7 +1090,7 @@ function Overview({ data }) {
         title="Chicago Police Districts"
         description="District number and district name reference used to interpret spatial and prediction outputs."
       >
-        <div className="card compact-table-card">
+        <InfoCard className="compact-table-card" title="Chicago Police Districts" detail={CARD_DETAILS.districtReference} interactive>
           <div className="table-wrap">
             <table>
               <thead>
@@ -762,7 +1109,7 @@ function Overview({ data }) {
               </tbody>
             </table>
           </div>
-        </div>
+        </InfoCard>
       </Section>
     </div>
   );
@@ -827,14 +1174,14 @@ function Analysis({ data }) {
       {analysis && (
         <>
           <div className="grid stats">
-            <Stat label="Selected records" value={formatNumber(analysis.records)} />
-            <Stat label="Peak hour" value={`${analysis.peakHour}:00`} />
-            <Stat label="Viewed hour" value={`${analysis.selectedHour}:00`} />
-            <Stat label="Mapped points" value={formatNumber(analysis.mapPoints.length)} />
+            <Stat label="Selected records" value={formatNumber(analysis.records)} detail={CARD_DETAILS.analysisRecords} />
+            <Stat label="Peak hour" value={`${analysis.peakHour}:00`} detail={CARD_DETAILS.analysisPeakHour} />
+            <Stat label="Viewed hour" value={`${analysis.selectedHour}:00`} detail={CARD_DETAILS.analysisViewedHour} />
+            <Stat label="Mapped points" value={formatNumber(analysis.mapPoints.length)} detail={CARD_DETAILS.analysisMapPoints} />
           </div>
 
           {analysis.highestRiskDistrict && (
-            <div className="card highest-risk-card">
+            <InfoCard className="highest-risk-card" detail={CARD_DETAILS.highestRiskDistrict}>
               <span className="muted">Highest Risk District</span>
               <strong>
                 {analysis.highestRiskDistrict.highest_risk_district
@@ -844,7 +1191,7 @@ function Analysis({ data }) {
               <p className="highest-risk-meta">
                 {formatNumber(analysis.highestRiskDistrict.crime_count)} crimes | {Number(analysis.highestRiskDistrict.risk_percentage).toFixed(1)}% risk
               </p>
-            </div>
+            </InfoCard>
           )}
 
           <Section
@@ -852,7 +1199,7 @@ function Analysis({ data }) {
             title="District-wise Analysis"
             description="Shows which police districts have the highest number of incidents for the selected crime category."
           >
-            <div className="card">
+            <InfoCard title="District-wise Incident Counts" detail={CARD_DETAILS.districtWiseChart} interactive>
               <div className="chart chart-medium">
                 <ChartView
                   type="bar"
@@ -863,17 +1210,17 @@ function Analysis({ data }) {
                   yLabel="District"
                 />
               </div>
-            </div>
+            </InfoCard>
           </Section>
 
           <Section
             eyebrow="2"
-            title="Spatial Analysis"
-            description="Plots incident locations to reveal geographical clustering and hotspot areas for the selected crime."
+            title="Geospatial Analysis"
+            description="Plots incident locations as a heatmap to reveal geographical clustering and hotspot areas for the selected crime."
           >
-            <div className="card">
-              <MapView points={analysis.mapPoints} />
-            </div>
+            <InfoCard title="Geospatial Crime Heatmap" detail={CARD_DETAILS.spatialHeatmap} interactive modalWide>
+              <MapView points={analysis.mapPoints} heatmap />
+            </InfoCard>
           </Section>
 
           <Section
@@ -881,7 +1228,7 @@ function Analysis({ data }) {
             title="Temporal Analysis"
             description="Compares incident frequency across all 24 hours to identify peak reporting periods."
           >
-            <div className="card">
+            <InfoCard title="Hourly Incident Distribution" detail={CARD_DETAILS.temporalChart} interactive>
               <div className="chart chart-medium">
                 <ChartView
                   type="bar"
@@ -891,22 +1238,26 @@ function Analysis({ data }) {
                   yLabel="Number of cases"
                 />
               </div>
-            </div>
+            </InfoCard>
           </Section>
 
           <Section
             eyebrow="4"
-            title="Time-wise Spatial Analysis"
-            description="Filters the spatial map by the selected hour to compare how hotspots change over time."
+            title="Time-wise Geospatial Analysis"
+            description="Filters the geospatial heatmap by the selected hour to compare how hotspots change over time."
           >
             <div className="grid two">
-              <div className="card">
-                <MapView points={analysis.hourMapPoints} color="#dc2626" />
-              </div>
-              <div className="card compact-table-card">
-                <h3>Selected-hour District Concentration</h3>
+              <InfoCard title="Hour-filtered Heatmap" detail={CARD_DETAILS.hourSpatialHeatmap} interactive modalWide>
+                <MapView points={analysis.hourMapPoints} color="#dc2626" heatmap />
+              </InfoCard>
+              <InfoCard
+                className="compact-table-card"
+                title="Selected-hour District Concentration"
+                detail={CARD_DETAILS.hourDistrictTable}
+                interactive
+              >
                 <DataTable rows={analysis.hourTopDistricts} />
-              </div>
+              </InfoCard>
             </div>
           </Section>
         </>
@@ -915,13 +1266,32 @@ function Analysis({ data }) {
   );
 }
 
-function MachineLearning({ data }) {
-  const [crime, setCrime] = useState("");
-  const [model, setModel] = useState("Random Forest");
+const INITIAL_ML_SESSION = {
+  crime: "",
+  model: "Random Forest",
+  result: null,
+  error: "",
+};
+
+const INITIAL_FUTURE_SESSION = {
+  crime: "",
+  district: "",
+  month: "8",
+  year: "2026",
+  activeModel: "",
+  result: null,
+  error: "",
+  districts: [],
+  crimeTypes: [],
+  optionsLoaded: false,
+};
+
+function MachineLearning({ data, session, setSession }) {
+  const { crime, model, result, error } = session;
   const [modelNames, setModelNames] = useState(DEFAULT_MODELS);
-  const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+
+  const patchSession = (updates) => setSession((prev) => ({ ...prev, ...updates }));
 
   useEffect(() => {
     fetch("/api/models")
@@ -934,22 +1304,21 @@ function MachineLearning({ data }) {
 
   useEffect(() => {
     if (data?.crimeTypes?.length && !crime) {
-      setCrime(data.crimeTypes[0]);
+      setSession((prev) => ({ ...prev, crime: data.crimeTypes[0] }));
     }
-  }, [data, crime]);
+  }, [data, crime, setSession]);
 
   function train() {
     setLoading(true);
-    setError("");
-    setResult(null);
+    patchSession({ error: "", result: null });
     fetch("/api/train", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ crime, model }),
     })
       .then((res) => res.json().then((body) => (res.ok ? body : Promise.reject(body))))
-      .then(setResult)
-      .catch((err) => setError(err.error || "Training failed."))
+      .then((body) => patchSession({ result: body, error: "" }))
+      .catch((err) => patchSession({ error: err.error || "Training failed.", result: null }))
       .finally(() => setLoading(false));
   }
 
@@ -962,7 +1331,7 @@ function MachineLearning({ data }) {
       <div className="controls">
         <div className="field">
           <label>Crime category</label>
-          <select value={crime} onChange={(event) => setCrime(event.target.value)}>
+          <select value={crime} onChange={(event) => patchSession({ crime: event.target.value })}>
             {data.crimeTypes.map((item) => (
               <option key={item}>{item}</option>
             ))}
@@ -970,7 +1339,7 @@ function MachineLearning({ data }) {
         </div>
         <div className="field">
           <label>Model</label>
-          <select value={model} onChange={(event) => setModel(event.target.value)}>
+          <select value={model} onChange={(event) => patchSession({ model: event.target.value })}>
             {modelNames.map((item) => (
               <option key={item}>{item}</option>
             ))}
@@ -986,12 +1355,12 @@ function MachineLearning({ data }) {
       {result && (
         <>
           <div className="grid stats">
-            <Stat label="Selected model" value={result.selected.model} />
-            <Stat label="Accuracy" value={`${result.selected.accuracy.toFixed(2)}%`} />
-            <Stat label="Precision" value={`${(result.selected.precision ?? 0).toFixed(2)}%`} />
-            <Stat label="Recall" value={`${(result.selected.recall ?? 0).toFixed(2)}%`} />
-            <Stat label="F1 score" value={`${(result.selected.f1 ?? 0).toFixed(2)}%`} />
-            <Stat label="Crime category" value={result.crime} />
+            <Stat label="Selected model" value={result.selected.model} detail={CARD_DETAILS.mlSelectedModel} />
+            <Stat label="Accuracy" value={`${result.selected.accuracy.toFixed(2)}%`} detail={CARD_DETAILS.mlAccuracy} />
+            <Stat label="Precision" value={`${(result.selected.precision ?? 0).toFixed(2)}%`} detail={CARD_DETAILS.mlPrecision} />
+            <Stat label="Recall" value={`${(result.selected.recall ?? 0).toFixed(2)}%`} detail={CARD_DETAILS.mlRecall} />
+            <Stat label="F1 score" value={`${(result.selected.f1 ?? 0).toFixed(2)}%`} detail={CARD_DETAILS.mlF1} />
+            <Stat label="Crime category" value={result.crime} detail={CARD_DETAILS.mlCrimeCategory} />
           </div>
 
           <Section
@@ -999,7 +1368,7 @@ function MachineLearning({ data }) {
             title="Machine Learning Model Comparison"
             description="Weighted precision, recall, F1-score, and accuracy across all classifiers for the selected crime category."
           >
-          <div className="card">
+          <InfoCard title="Classifier Metrics Comparison" detail={CARD_DETAILS.mlModelComparison} interactive>
             <div className="chart">
               <ChartView
                 type="bar"
@@ -1039,7 +1408,20 @@ function MachineLearning({ data }) {
                 </tbody>
               </table>
             </div>
-          </div>
+          </InfoCard>
+          </Section>
+
+          <Section
+            eyebrow="Matrix"
+            title="Confusion Matrix"
+            description="Test-set confusion matrix for the selected model: actual districts (rows) versus predicted districts (columns)."
+          >
+            <InfoCard title="District Confusion Matrix" detail={CARD_DETAILS.mlConfusionMatrix} interactive>
+              <ConfusionMatrixView
+                labels={(result.confusionMatrix || result.selected.confusionMatrix)?.labels || []}
+                matrix={(result.confusionMatrix || result.selected.confusionMatrix)?.matrix || []}
+              />
+            </InfoCard>
           </Section>
 
           <Section
@@ -1047,7 +1429,7 @@ function MachineLearning({ data }) {
             title="District Evaluation Report"
             description="Per-district precision, recall, F1-score, and support for the selected model (district-level breakdown)."
           >
-          <div className="card">
+          <InfoCard title="Per-district Classification Metrics" detail={CARD_DETAILS.mlDistrictReport} interactive>
             <div className="table-wrap">
               <table>
                 <thead>
@@ -1072,18 +1454,18 @@ function MachineLearning({ data }) {
                 </tbody>
               </table>
             </div>
-          </div>
+          </InfoCard>
           </Section>
 
           <Section
             eyebrow="Map"
-            title="Predicted District Map"
-            description="Displays each incident location with green markers for correct district predictions and red markers for incorrect predictions."
+            title="Predicted District Heatmap"
+            description="Heatmap of incident locations for the selected model. Warmer colors highlight incorrect district predictions."
           >
-          <div className="card">
-            <p className="muted table-note">Green points are correct predictions and red points are incorrect predictions.</p>
-            <MapView points={result.predictionMap} color={(point) => (point.Is_Correct ? "#16a34a" : "#dc2626")} />
-          </div>
+          <InfoCard title="Predicted District Heatmap" detail={CARD_DETAILS.mlPredictionHeatmap} interactive modalWide>
+            <p className="muted table-note">Cooler greens indicate correct predictions; warmer yellow and red areas indicate incorrect predictions.</p>
+            <MapView points={result.predictionMap} color={(point) => (point.Is_Correct ? "#16a34a" : "#dc2626")} heatmap />
+          </InfoCard>
           </Section>
         </>
       )}
@@ -1122,49 +1504,62 @@ async function readApiResponse(res) {
   return body;
 }
 
-function FutureCrimePrediction({ data }) {
+function FutureCrimePrediction({ data, session, setSession }) {
   const monthOptions = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December",
   ];
-  const [districts, setDistricts] = useState([]);
-  const [crimeTypes, setCrimeTypes] = useState([]);
-  const [district, setDistrict] = useState("");
-  const [crime, setCrime] = useState("");
-  const [month, setMonth] = useState("8");
-  const [year, setYear] = useState("2026");
-  const [activeModel, setActiveModel] = useState("");
-  const [result, setResult] = useState(null);
+  const {
+    districts,
+    crimeTypes,
+    district,
+    crime,
+    month,
+    year,
+    activeModel,
+    result,
+    error,
+    optionsLoaded,
+  } = session;
   const [loading, setLoading] = useState(false);
   const [modelSwitching, setModelSwitching] = useState(false);
-  const [error, setError] = useState("");
   const forecastRequestRef = useRef(0);
 
+  const patchSession = (updates) => setSession((prev) => ({ ...prev, ...updates }));
+
   useEffect(() => {
-    if (!data) return;
+    if (!data || optionsLoaded) return;
     fetch("/api/hotspot/options")
       .then((res) => res.json().then((body) => (res.ok ? body : Promise.reject(body))))
       .then((body) => {
-        setDistricts(body.districts || []);
-        setCrimeTypes(body.crimeTypes || data.crimeTypes || []);
-        setDistrict(String(body.defaultDistrict || 11));
-        setCrime(body.defaultCrime || data.crimeTypes?.[0] || "");
-        setMonth(String(body.defaultMonth || 8));
-        setYear(String(body.defaultYear || 2026));
-        setActiveModel(body.selectedModel || "");
+        setSession((prev) => ({
+          ...prev,
+          optionsLoaded: true,
+          districts: body.districts || [],
+          crimeTypes: body.crimeTypes || data.crimeTypes || [],
+          district: prev.district || String(body.defaultDistrict || 11),
+          crime: prev.crime || body.defaultCrime || data.crimeTypes?.[0] || "",
+          month: prev.month || String(body.defaultMonth || 8),
+          year: prev.year || String(body.defaultYear || 2026),
+          activeModel: prev.activeModel || body.selectedModel || "",
+        }));
       })
-      .catch((err) => setError(err.error || "Could not load hotspot options."));
-  }, [data]);
+      .catch((err) => patchSession({ error: err.error || "Could not load hotspot options." }));
+  }, [data, optionsLoaded, setSession]);
 
-  useEffect(() => {
-    // If crime category changes, reset stale model/result from previous crime.
-    setResult(null);
-    setActiveModel("");
-  }, [crime]);
+  function handleCrimeChange(nextCrime) {
+    setSession((prev) => ({
+      ...prev,
+      crime: nextCrime,
+      result: prev.result?.crime === nextCrime ? prev.result : null,
+      activeModel: prev.result?.crime === nextCrime ? prev.activeModel : "",
+      error: "",
+    }));
+  }
 
   function runForecast({ modelOverride, switchOnly = false } = {}) {
     if (!district || !crime) {
-      setError("Select a crime category and district first.");
+      patchSession({ error: "Select a crime category and district first." });
       return;
     }
 
@@ -1172,17 +1567,10 @@ function FutureCrimePrediction({ data }) {
     forecastRequestRef.current = requestId;
     setLoading(true);
     setModelSwitching(Boolean(switchOnly));
-    setError("");
+    patchSession({ error: "" });
 
-    const payload = {
-      district: Number(district),
-      month: Number(month),
-      year: Number(year),
-      crime,
-    };
     const resultFromSameCrime = result?.crime === crime ? result : null;
     const chosenModel = modelOverride || (switchOnly ? (resultFromSameCrime?.activeModel || resultFromSameCrime?.model) : undefined);
-    if (chosenModel) payload.model = chosenModel;
 
     fetch("/api/hotspot/forecast", {
       method: "POST",
@@ -1199,12 +1587,15 @@ function FutureCrimePrediction({ data }) {
       .then(readApiResponse)
       .then((body) => {
         if (forecastRequestRef.current !== requestId) return;
-        setResult(body);
-        setActiveModel(body.activeModel || body.model || "");
+        patchSession({
+          result: body,
+          activeModel: body.activeModel || body.model || "",
+          error: "",
+        });
       })
       .catch((err) => {
         if (forecastRequestRef.current !== requestId) return;
-        setError(err.message || err.error || "Hotspot prediction failed.");
+        patchSession({ error: err.message || err.error || "Hotspot prediction failed." });
       })
       .finally(() => {
         if (forecastRequestRef.current !== requestId) return;
@@ -1222,7 +1613,7 @@ function FutureCrimePrediction({ data }) {
     const currentModel = result.activeModel || result.model;
     if (modelName === currentModel) return;
     if (result.evaluation?.[modelName]?.Error) {
-      setError(`Model unavailable: ${result.evaluation[modelName].Error}`);
+      patchSession({ error: `Model unavailable: ${result.evaluation[modelName].Error}` });
       return;
     }
 
@@ -1230,13 +1621,19 @@ function FutureCrimePrediction({ data }) {
     forecastRequestRef.current = requestId;
     setModelSwitching(true);
     setLoading(true);
-    setError("");
+    patchSession({ error: "" });
 
-    setResult((prev) => ({
+    setSession((prev) => ({
       ...prev,
       activeModel: modelName,
-      model: modelName,
-      selectedModelMetrics: hotspotModelMetrics(prev, modelName) || prev.selectedModelMetrics,
+      result: prev.result
+        ? {
+            ...prev.result,
+            activeModel: modelName,
+            model: modelName,
+            selectedModelMetrics: hotspotModelMetrics(prev.result, modelName) || prev.result.selectedModelMetrics,
+          }
+        : prev.result,
     }));
 
     fetch("/api/hotspot/forecast", {
@@ -1254,14 +1651,21 @@ function FutureCrimePrediction({ data }) {
       .then(readApiResponse)
       .then((body) => {
         if (forecastRequestRef.current !== requestId) return;
-        setResult((prev) => ({ ...prev, ...body }));
-        setActiveModel(body.activeModel || body.model || modelName);
+        setSession((prev) => ({
+          ...prev,
+          result: prev.result ? { ...prev.result, ...body } : body,
+          activeModel: body.activeModel || body.model || modelName,
+          error: "",
+        }));
       })
       .catch((err) => {
         if (forecastRequestRef.current !== requestId) return;
-        setError(err.message || err.error || "Could not switch regression model.");
-        setResult((prev) => (prev ? { ...prev, activeModel: currentModel, model: currentModel } : prev));
-        setActiveModel(currentModel || "");
+        patchSession({ error: err.message || err.error || "Could not switch regression model." });
+        setSession((prev) => ({
+          ...prev,
+          result: prev.result ? { ...prev.result, activeModel: currentModel, model: currentModel } : prev.result,
+          activeModel: currentModel || "",
+        }));
       })
       .finally(() => {
         if (forecastRequestRef.current !== requestId) return;
@@ -1306,7 +1710,7 @@ function FutureCrimePrediction({ data }) {
         <div className="controls">
           <div className="field">
             <label>Crime category</label>
-            <select value={crime} onChange={(event) => setCrime(event.target.value)}>
+            <select value={crime} onChange={(event) => handleCrimeChange(event.target.value)}>
               {(crimeTypes.length ? crimeTypes : data.crimeTypes || []).map((item) => (
                 <option key={item}>{item}</option>
               ))}
@@ -1314,7 +1718,7 @@ function FutureCrimePrediction({ data }) {
           </div>
           <div className="field">
             <label>District</label>
-            <select value={district} onChange={(event) => setDistrict(event.target.value)}>
+            <select value={district} onChange={(event) => patchSession({ district: event.target.value })}>
               {districts.map((item) => (
                 <option key={item.district} value={item.district}>
                   {item.district} — {item.name}
@@ -1324,7 +1728,7 @@ function FutureCrimePrediction({ data }) {
           </div>
           <div className="field">
             <label>Month</label>
-            <select value={month} onChange={(event) => setMonth(event.target.value)}>
+            <select value={month} onChange={(event) => patchSession({ month: event.target.value })}>
               {monthOptions.map((label, index) => (
                 <option key={label} value={index + 1}>
                   {label}
@@ -1334,7 +1738,7 @@ function FutureCrimePrediction({ data }) {
           </div>
           <div className="field">
             <label>Year</label>
-            <input type="number" min="2001" max="2100" value={year} onChange={(event) => setYear(event.target.value)} />
+            <input type="number" min="2001" max="2100" value={year} onChange={(event) => patchSession({ year: event.target.value })} />
           </div>
           <button className="primary" onClick={predict} disabled={loading || !district || !crime}>
             {loading ? "Predicting..." : "Predict Hotspot"}
@@ -1354,27 +1758,28 @@ function FutureCrimePrediction({ data }) {
       {result && (
         <>
           <div className="grid stats" key={`forecast-${displayModel}-${result.predicted_crimes}-${result.risk_score}`}>
-            <Stat label="Crime category" value={result.crime || crime} />
-            <Stat label="District" value={`${result.district} — ${result.district_name}`} />
-            <Stat label="Predicted crimes" value={formatPredictedCrimes(result.predicted_crimes)} />
-            <Stat label="Active model" value={displayModel || "—"} />
+            <Stat label="Crime category" value={result.crime || crime} detail={CARD_DETAILS.forecastCrime} />
+            <Stat label="District" value={`${result.district} — ${result.district_name}`} detail={CARD_DETAILS.forecastDistrict} />
+            <Stat label="Predicted crimes" value={formatPredictedCrimes(result.predicted_crimes)} detail={CARD_DETAILS.forecastPredicted} />
+            <Stat label="Active model" value={displayModel || "—"} detail={CARD_DETAILS.forecastActiveModel} />
           </div>
           <div className="grid stats">
-            <Stat label="Risk score" value={result.risk_score} />
-            <div className="card stat">
+            <Stat label="Risk score" value={result.risk_score} detail={CARD_DETAILS.forecastRiskScore} />
+            <InfoCard className="stat" detail={CARD_DETAILS.forecastRiskLevel}>
               <span className="muted">Risk level</span>
-              <strong><RiskBadge level={result.risk_level} /></strong>
-            </div>
-            <Stat label="Best model (R²)" value={`${bestModel || "—"} · ${bestModelR2.toFixed(4)}`} />
-            <Stat label="Active model R²" value={activeModelR2.toFixed(4)} />
+              <div className="stat-custom-value">
+                <RiskBadge level={result.risk_level} />
+              </div>
+            </InfoCard>
+            <Stat label="Best model (R²)" value={`${bestModel || "—"} · ${bestModelR2.toFixed(4)}`} detail={CARD_DETAILS.forecastBestModel} />
+            <Stat label="Active model R²" value={activeModelR2.toFixed(4)} detail={CARD_DETAILS.forecastActiveR2} />
           </div>
           <p className="muted table-note">
             Click any row in <strong>Regression Model Evaluation</strong> to switch the active model and refresh predictions, map, and trend chart.
           </p>
 
           <div className="grid two">
-            <div className="card risk-card">
-              <h3>Forecast Summary</h3>
+            <InfoCard className="risk-card" title="Forecast Summary" detail={CARD_DETAILS.forecastSummary}>
               <p className="muted table-note">
                 Crime: {result.crime || crime}. Prediction target: {result.month_name} {result.year}. Active model: {displayModel}.
               </p>
@@ -1395,10 +1800,9 @@ function FutureCrimePrediction({ data }) {
               <p className="muted table-note">
                 Dynamic thresholds — LOW: ≤ {Math.round(result.riskThresholds?.low_max || 0)}, MEDIUM: ≤ {Math.round(result.riskThresholds?.medium_max || 0)}, HIGH: above medium band.
               </p>
-            </div>
+            </InfoCard>
 
-            <div className="card compact-table-card">
-              <h3>Regression Model Evaluation</h3>
+            <InfoCard className="compact-table-card" title="Regression Model Evaluation" detail={CARD_DETAILS.regressionEvaluation} interactive>
               <p className="muted table-note">★ = best R² · highlighted row = active model for predictions</p>
               <div className="table-wrap">
                 <table>
@@ -1427,7 +1831,7 @@ function FutureCrimePrediction({ data }) {
                   </tbody>
                 </table>
               </div>
-            </div>
+            </InfoCard>
           </div>
 
           <Section
@@ -1435,7 +1839,7 @@ function FutureCrimePrediction({ data }) {
             title="Actual Crime Trend vs Predicted Crime Trend"
             description={`Historical ${result.crime || crime} counts for district ${result.district_name} compared with predictions from ${displayModel}.`}
           >
-            <div className="card">
+            <InfoCard title="Actual vs Predicted Trend" detail={CARD_DETAILS.forecastTrend} interactive>
               <div className="chart chart-medium">
                 <ChartView
                   key={`${displayModel}-${result.predicted_crimes}-${(result.trend?.predicted || []).join(",")}`}
@@ -1450,7 +1854,7 @@ function FutureCrimePrediction({ data }) {
                   yLabel="Crime count"
                 />
               </div>
-            </div>
+            </InfoCard>
           </Section>
 
           <Section
@@ -1458,14 +1862,14 @@ function FutureCrimePrediction({ data }) {
             title="Future Hotspot Map"
             description="Green markers indicate low future risk, yellow markers medium risk, and red markers high future risk."
           >
-            <div className="card">
+            <InfoCard title="Future Hotspot Map" detail={CARD_DETAILS.futureHotspotHeatmap} interactive modalWide>
               <div className="legend-list map-legend">
                 <span><i style={{ background: "#16a34a" }} /> LOW</span>
                 <span><i style={{ background: "#eab308" }} /> MEDIUM</span>
                 <span><i style={{ background: "#dc2626" }} /> HIGH</span>
               </div>
-              <MapView key={`hotspot-map-${displayModel}`} points={result.mapPoints} />
-            </div>
+              <MapView key={`hotspot-map-${displayModel}`} points={result.mapPoints} heatmap={false} />
+            </InfoCard>
           </Section>
 
           <Section
@@ -1473,7 +1877,7 @@ function FutureCrimePrediction({ data }) {
             title="All District Future Predictions"
             description="Regression forecast and risk classification for every police district in the uploaded dataset."
           >
-            <div className="card compact-table-card">
+            <InfoCard className="compact-table-card" title="All District Forecasts" detail={CARD_DETAILS.allDistrictPredictions} interactive>
               <DataTable
                 rows={(result.allDistrictPredictions || []).map((row) => ({
                   District: row.district,
@@ -1485,7 +1889,7 @@ function FutureCrimePrediction({ data }) {
                   Risk_Level: row.risk_level,
                 }))}
               />
-            </div>
+            </InfoCard>
           </Section>
         </>
       )}
@@ -1557,6 +1961,8 @@ function App() {
   const [message, setMessage] = useState("");
   const [fileName, setFileName] = useState("");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mlSession, setMlSession] = useState(INITIAL_ML_SESSION);
+  const [futureSession, setFutureSession] = useState(INITIAL_FUTURE_SESSION);
 
   const datasetSummary = useMemo(() => {
     if (!data) return null;
@@ -1593,6 +1999,8 @@ function App() {
       .then((res) => res.json().then((body) => (res.ok ? body : Promise.reject(body))))
       .then((body) => {
         setData(body);
+        setMlSession(INITIAL_ML_SESSION);
+        setFutureSession(INITIAL_FUTURE_SESSION);
         setPage("Overview");
         setMessage(`Cleaned ${formatNumber(body.cleaning?.originalRows || body.rows)} raw rows into ${formatNumber(body.rows)} usable records.`);
       })
@@ -1680,8 +2088,12 @@ function App() {
           )}
           {page === "Overview" && <Overview data={data} />}
           {page === "Analysis" && <Analysis data={data} />}
-          {page === "Machine Learning" && <MachineLearning data={data} />}
-          {page === "Future Crime Prediction" && <FutureCrimePrediction data={data} />}
+          {page === "Machine Learning" && (
+            <MachineLearning data={data} session={mlSession} setSession={setMlSession} />
+          )}
+          {page === "Future Crime Prediction" && (
+            <FutureCrimePrediction data={data} session={futureSession} setSession={setFutureSession} />
+          )}
           {page === "About Project" && <AboutProject />}
         </main>
       </section>

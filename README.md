@@ -175,9 +175,6 @@ The framework compares multiple supervised learning algorithms:
 | Logistic Regression | Classification |
 | Support Vector Machine (SVM) | Classification |
 | Decision Tree | Classification |
-| Random Forest | Classification |
-| Gradient Boosting | Classification |
-| Multi-Layer Perceptron (MLP) | Classification |
 | Voting Ensemble Classifier | Classification |
 
 ---
@@ -191,9 +188,6 @@ The forecasting module includes:
 | Linear Regression |
 | Support Vector Regression (SVR) |
 | Decision Tree Regressor |
-| Random Forest Regressor |
-| Gradient Boosting Regressor |
-| Multi-Layer Perceptron Regressor |
 | Voting Ensemble Regressor |
 
 ---

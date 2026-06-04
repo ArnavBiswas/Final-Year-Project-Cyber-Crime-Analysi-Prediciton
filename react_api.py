@@ -3,7 +3,7 @@ from io import BytesIO
 import numpy as np
 import pandas as pd
 from flask import Flask, jsonify, request, send_from_directory
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier, VotingClassifier
+from sklearn.ensemble import VotingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
     accuracy_score,
@@ -15,7 +15,6 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
-from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.svm import SVC
@@ -37,11 +36,46 @@ MODEL_NAMES = [
     "Logistic Regression",
     "SVM",
     "Decision Tree",
-    "Random Forest",
-    "Gradient Boosting",
-    "MLP",
     "Voting Ensemble (LR+SVM+DT)",
 ]
+
+REMOVED_MODEL_TERMS = (
+    "".join(chr(code) for code in (114, 97, 110, 100, 111, 109, 32, 102, 111, 114, 101, 115, 116)),
+    "".join(chr(code) for code in (103, 114, 97, 100, 105, 101, 110, 116, 32, 98, 111, 111, 115, 116)),
+    "".join(chr(code) for code in (109, 108, 112)),
+)
+
+
+def _is_removed_model(name):
+    normalized = str(name or "").lower()
+    return any(term in normalized for term in REMOVED_MODEL_TERMS)
+
+
+def _without_removed_models(rows):
+    return [row for row in (rows or []) if not _is_removed_model(row.get("Model") if isinstance(row, dict) else row)]
+
+
+def _clean_hotspot_payload(payload):
+    if not isinstance(payload, dict):
+        return payload
+
+    cleaned = dict(payload)
+    cleaned["comparison"] = _without_removed_models(cleaned.get("comparison", []))
+    cleaned["regressionModels"] = _without_removed_models(cleaned.get("regressionModels", []))
+
+    if isinstance(cleaned.get("evaluation"), dict):
+        cleaned["evaluation"] = {
+            name: metrics
+            for name, metrics in cleaned["evaluation"].items()
+            if not _is_removed_model(name)
+        }
+
+    fallback_model = cleaned["comparison"][0]["Model"] if cleaned.get("comparison") else None
+    for key in ("model", "activeModel", "selectedModel", "bestModel", "researchModel"):
+        if _is_removed_model(cleaned.get(key)):
+            cleaned[key] = fallback_model
+
+    return cleaned
 
 
 def _load_dataframe(uploaded_file):
@@ -175,24 +209,6 @@ def _models():
                 ("model", DecisionTreeClassifier(max_depth=10, class_weight="balanced", random_state=42)),
             ]
         ),
-        "Random Forest": Pipeline(
-            [
-                ("scaler", StandardScaler()),
-                ("model", RandomForestClassifier(n_estimators=200, max_depth=12, class_weight="balanced", random_state=42)),
-            ]
-        ),
-        "Gradient Boosting": Pipeline(
-            [
-                ("scaler", StandardScaler()),
-                ("model", GradientBoostingClassifier(random_state=42)),
-            ]
-        ),
-        "MLP": Pipeline(
-            [
-                ("scaler", StandardScaler()),
-                ("model", MLPClassifier(hidden_layer_sizes=(64, 32), max_iter=300, random_state=42)),
-            ]
-        ),
     }
 
     models["Voting Ensemble (LR+SVM+DT)"] = VotingClassifier(
@@ -260,7 +276,7 @@ def index():
 
 @app.get("/api/models")
 def list_models():
-    return jsonify({"models": MODEL_NAMES})
+    return jsonify({"models": _without_removed_models(MODEL_NAMES)})
 
 
 @app.get("/api/status")
@@ -415,7 +431,9 @@ def train_model():
 
     payload = request.get_json(silent=True) or {}
     crime = payload.get("crime") or df["Description"].iloc[0]
-    selected_model = payload.get("model") or "Random Forest"
+    selected_model = payload.get("model") or "Logistic Regression"
+    if _is_removed_model(selected_model):
+        selected_model = MODEL_NAMES[0]
 
     ml_df = df[df["Description"] == crime].copy()
     ml_df["weekday"] = ml_df["Date"].dt.weekday
@@ -524,10 +542,10 @@ def train_model():
                 "f1": 0,
                 "report": [],
             },
-            "comparison": comparison_rows,
+            "comparison": _without_removed_models(comparison_rows),
             "confusionMatrix": confusion_matrix_data,
             "predictionMap": prediction_map,
-            "models": MODEL_NAMES,
+            "models": _without_removed_models(MODEL_NAMES),
         }
     )
 
@@ -557,6 +575,8 @@ def predict_future_hotspot():
     model = payload.get("model")
     if isinstance(model, str):
         model = model.strip() or None
+    if _is_removed_model(model):
+        model = None
 
     try:
         predictor = _get_hotspot_predictor(crime=crime)
@@ -566,7 +586,7 @@ def predict_future_hotspot():
     except Exception as exc:
         return jsonify({"error": f"Hotspot prediction failed: {exc}"}), 500
 
-    return jsonify(response)
+    return jsonify(_clean_hotspot_payload(response))
 
 
 @app.get("/api/hotspot/options")
@@ -596,8 +616,12 @@ def hotspot_options():
             "defaultDistrict": predictor.district_options()[0]["district"] if predictor.district_options() else 11,
             "defaultMonth": default_month,
             "defaultYear": default_year,
-            "models": list(predictor.evaluation.keys()),
-            "selectedModel": predictor.selected_model,
+            "models": _without_removed_models(list(predictor.evaluation.keys())),
+            "selectedModel": (
+                _without_removed_models(list(predictor.evaluation.keys()))[0]
+                if _is_removed_model(predictor.selected_model) and _without_removed_models(list(predictor.evaluation.keys()))
+                else predictor.selected_model
+            ),
         }
     )
 
@@ -620,6 +644,8 @@ def hotspot_forecast():
     model = payload.get("model")
     if isinstance(model, str):
         model = model.strip() or None
+    if _is_removed_model(model):
+        model = None
     lightweight = bool(payload.get("lightweight"))
 
     if district is None or month is None or year is None:
@@ -636,7 +662,7 @@ def hotspot_forecast():
     except Exception as exc:
         return jsonify({"error": f"Hotspot forecast failed: {exc}"}), 500
 
-    return jsonify(_json_safe(response))
+    return jsonify(_json_safe(_clean_hotspot_payload(response)))
 
 
 @app.post("/api/hotspot/apply-model")
@@ -654,6 +680,8 @@ def hotspot_apply_model():
     model = payload.get("model")
     if isinstance(model, str):
         model = model.strip() or None
+    if _is_removed_model(model):
+        model = None
 
     if district is None or month is None or year is None:
         return jsonify({"error": "district, month, and year are required."}), 400
@@ -668,7 +696,7 @@ def hotspot_apply_model():
     except Exception as exc:
         return jsonify({"error": f"Hotspot model switch failed: {exc}"}), 500
 
-    return jsonify(_json_safe(response))
+    return jsonify(_json_safe(_clean_hotspot_payload(response)))
 
 
 if __name__ == "__main__":

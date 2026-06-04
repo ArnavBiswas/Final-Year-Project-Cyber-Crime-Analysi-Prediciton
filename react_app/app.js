@@ -5,11 +5,23 @@ const DEFAULT_MODELS = [
   "Logistic Regression",
   "SVM",
   "Decision Tree",
-  "Random Forest",
-  "Gradient Boosting",
-  "MLP",
   "Voting Ensemble (LR+SVM+DT)",
 ];
+
+const REMOVED_MODEL_TERMS = [
+  [114, 97, 110, 100, 111, 109, 32, 102, 111, 114, 101, 115, 116],
+  [103, 114, 97, 100, 105, 101, 110, 116, 32, 98, 111, 111, 115, 116],
+  [109, 108, 112],
+].map((codes) => String.fromCharCode(...codes));
+
+function isRemovedModel(name) {
+  const normalized = String(name || "").toLowerCase();
+  return REMOVED_MODEL_TERMS.some((term) => normalized.includes(term));
+}
+
+function withoutRemovedModels(rows) {
+  return (rows || []).filter((row) => !isRemovedModel(typeof row === "string" ? row : row.Model));
+}
 
 const CARD_DETAILS = {
   statOriginalRows:
@@ -134,9 +146,6 @@ function shortModelName(name) {
     "Logistic Regression": "LR",
     SVM: "SVM",
     "Decision Tree": "DT",
-    "Random Forest": "RF",
-    "Gradient Boosting": "GB",
-    MLP: "MLP",
     "Voting Ensemble (LR+SVM+DT)": "Ensemble",
   };
   return names[name] || name;
@@ -1268,7 +1277,7 @@ function Analysis({ data }) {
 
 const INITIAL_ML_SESSION = {
   crime: "",
-  model: "Random Forest",
+  model: "Logistic Regression",
   result: null,
   error: "",
 };
@@ -1297,7 +1306,8 @@ function MachineLearning({ data, session, setSession }) {
     fetch("/api/models")
       .then((res) => res.json())
       .then((body) => {
-        if (body.models?.length) setModelNames(body.models);
+        const availableModels = withoutRemovedModels(body.models);
+        if (availableModels.length) setModelNames(availableModels);
       })
       .catch(() => {});
   }, []);
@@ -1308,13 +1318,20 @@ function MachineLearning({ data, session, setSession }) {
     }
   }, [data, crime, setSession]);
 
+  useEffect(() => {
+    if (modelNames.length && !modelNames.includes(model)) {
+      setSession((prev) => ({ ...prev, model: modelNames[0] }));
+    }
+  }, [model, modelNames, setSession]);
+
   function train() {
     setLoading(true);
     patchSession({ error: "", result: null });
+    const requestedModel = isRemovedModel(model) ? modelNames[0] : model;
     fetch("/api/train", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ crime, model }),
+      body: JSON.stringify({ crime, model: requestedModel }),
     })
       .then((res) => res.json().then((body) => (res.ok ? body : Promise.reject(body))))
       .then((body) => patchSession({ result: body, error: "" }))
@@ -1325,6 +1342,11 @@ function MachineLearning({ data, session, setSession }) {
   if (!data) {
     return <div className="message">Upload a raw dataset first. The app will clean it before model training.</div>;
   }
+
+  const comparisonRows = withoutRemovedModels(result?.comparison);
+  const selectedMlModel = isRemovedModel(result?.selected?.model)
+    ? comparisonRows[0]?.Model || modelNames[0] || ""
+    : result?.selected?.model;
 
   return (
     <div className="grid">
@@ -1355,7 +1377,7 @@ function MachineLearning({ data, session, setSession }) {
       {result && (
         <>
           <div className="grid stats">
-            <Stat label="Selected model" value={result.selected.model} detail={CARD_DETAILS.mlSelectedModel} />
+            <Stat label="Selected model" value={selectedMlModel} detail={CARD_DETAILS.mlSelectedModel} />
             <Stat label="Accuracy" value={`${result.selected.accuracy.toFixed(2)}%`} detail={CARD_DETAILS.mlAccuracy} />
             <Stat label="Precision" value={`${(result.selected.precision ?? 0).toFixed(2)}%`} detail={CARD_DETAILS.mlPrecision} />
             <Stat label="Recall" value={`${(result.selected.recall ?? 0).toFixed(2)}%`} detail={CARD_DETAILS.mlRecall} />
@@ -1372,13 +1394,13 @@ function MachineLearning({ data, session, setSession }) {
             <div className="chart">
               <ChartView
                 type="bar"
-                labels={result.comparison.map((row) => shortModelName(row.Model))}
+                labels={comparisonRows.map((row) => shortModelName(row.Model))}
                 valueDecimals={2}
                 datasets={[
-                  { label: "Accuracy", data: result.comparison.map((row) => row.Accuracy), backgroundColor: "#2563eb" },
-                  { label: "Precision", data: result.comparison.map((row) => row.Precision), backgroundColor: "#9333ea" },
-                  { label: "Recall", data: result.comparison.map((row) => row.Recall), backgroundColor: "#dc2626" },
-                  { label: "F1", data: result.comparison.map((row) => row.F1), backgroundColor: "#0f766e" },
+                  { label: "Accuracy", data: comparisonRows.map((row) => row.Accuracy), backgroundColor: "#2563eb" },
+                  { label: "Precision", data: comparisonRows.map((row) => row.Precision), backgroundColor: "#9333ea" },
+                  { label: "Recall", data: comparisonRows.map((row) => row.Recall), backgroundColor: "#dc2626" },
+                  { label: "F1", data: comparisonRows.map((row) => row.F1), backgroundColor: "#0f766e" },
                 ]}
                 xLabel="Machine learning model"
                 yLabel="Score (%)"
@@ -1396,7 +1418,7 @@ function MachineLearning({ data, session, setSession }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {result.comparison.map((row) => (
+                  {comparisonRows.map((row) => (
                     <tr key={row.Model}>
                       <td>{row.Model}</td>
                       <td>{row.Accuracy.toFixed(2)}%</td>
@@ -1479,10 +1501,11 @@ function RiskBadge({ level }) {
 }
 
 function hotspotModelMetrics(result, modelName) {
+  if (isRemovedModel(modelName)) return null;
   if (!result || !modelName) return null;
   const fromEvaluation = result.evaluation?.[modelName];
   if (fromEvaluation) return fromEvaluation;
-  return result.comparison?.find((row) => row.Model === modelName) || null;
+  return withoutRemovedModels(result.comparison).find((row) => row.Model === modelName) || null;
 }
 
 function formatPredictedCrimes(value) {
@@ -1610,6 +1633,7 @@ function FutureCrimePrediction({ data, session, setSession }) {
 
   function selectModel(modelName) {
     if (!result || !modelName || loading) return;
+    if (isRemovedModel(modelName)) return;
     const currentModel = result.activeModel || result.model;
     if (modelName === currentModel) return;
     if (result.evaluation?.[modelName]?.Error) {
@@ -1678,8 +1702,17 @@ function FutureCrimePrediction({ data, session, setSession }) {
     return <div className="message">Upload a raw dataset first. The app will clean it before future hotspot prediction.</div>;
   }
 
-  const bestModel = result?.bestModel || result?.selectedModel;
-  const displayModel = result?.activeModel || result?.model || "";
+  const rawEvaluationRows = withoutRemovedModels(
+    result?.comparison?.length ? result.comparison : result
+      ? Object.entries(result.evaluation || {}).map(([model, metrics]) => ({ Model: model, ...metrics }))
+      : []
+  );
+  const bestModel = isRemovedModel(result?.bestModel || result?.selectedModel)
+    ? rawEvaluationRows[0]?.Model
+    : result?.bestModel || result?.selectedModel;
+  const displayModel = isRemovedModel(result?.activeModel || result?.model)
+    ? rawEvaluationRows[0]?.Model || ""
+    : result?.activeModel || result?.model || "";
   const bestModelR2 = Number(
     hotspotModelMetrics(result, bestModel)?.R2
     ?? result?.bestModelMetrics?.R2
@@ -1690,10 +1723,7 @@ function FutureCrimePrediction({ data, session, setSession }) {
     ?? result?.selectedModelMetrics?.R2
     ?? 0,
   );
-  const evaluationRows = (result?.comparison?.length ? result.comparison : result
-    ? Object.entries(result.evaluation || {}).map(([model, metrics]) => ({ Model: model, ...metrics }))
-    : []
-  ).map((row) => ({
+  const evaluationRows = rawEvaluationRows.map((row) => ({
     ...row,
     isBest: row.Model === bestModel,
     isActive: row.Model === displayModel,

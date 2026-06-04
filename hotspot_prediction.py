@@ -115,7 +115,7 @@ class FutureHotspotPredictor:
         self.evaluation = {}
         self.comparison = []
         self.risk_thresholds = {"low_max": 0.0, "medium_max": 0.0}
-        self.selected_model = "Random Forest Regressor"
+        self.selected_model = REGRESSION_MODEL_NAMES[0]
         self.best_model = None
         self.selection_reason = ""
         self.research_model = "Voting Ensemble Regressor"

@@ -69,7 +69,7 @@ const CARD_DETAILS = {
   mlConfusionMatrix:
     "Rows are actual districts and columns are predicted districts. Diagonal cells are correct predictions; off-diagonal cells show confusion between district pairs.",
   mlPredictionHeatmap:
-    "Heatmap of incident locations by prediction outcome. Warmer areas highlight incorrect district predictions; cooler greens indicate correct predictions.",
+    "Point map of incident locations colored by prediction outcome. Green spots indicate correct district predictions; red spots indicate incorrect predictions.",
   forecastCrime:
     "Cybercrime category used to train monthly regression models and generate the district forecast shown on this page.",
   forecastDistrict:
@@ -1459,12 +1459,12 @@ function MachineLearning({ data, session, setSession }) {
 
           <Section
             eyebrow="Map"
-            title="Predicted District Heatmap"
-            description="Heatmap of incident locations for the selected model. Warmer colors highlight incorrect district predictions."
+            title="Predicted District Map"
+            description="Incident locations for the selected model, colored by whether the predicted district matches the actual district."
           >
-          <InfoCard title="Predicted District Heatmap" detail={CARD_DETAILS.mlPredictionHeatmap} interactive modalWide>
-            <p className="muted table-note">Cooler greens indicate correct predictions; warmer yellow and red areas indicate incorrect predictions.</p>
-            <MapView points={result.predictionMap} color={(point) => (point.Is_Correct ? "#16a34a" : "#dc2626")} heatmap />
+          <InfoCard title="Predicted District Map" detail={CARD_DETAILS.mlPredictionHeatmap} interactive modalWide>
+            <p className="muted table-note">Green spots = correct predictions. Red spots = incorrect predictions.</p>
+            <MapView points={result.predictionMap} color={(point) => (point.Is_Correct ? "#16a34a" : "#dc2626")} heatmap={false} />
           </InfoCard>
           </Section>
         </>
@@ -1678,7 +1678,7 @@ function FutureCrimePrediction({ data, session, setSession }) {
     return <div className="message">Upload a raw dataset first. The app will clean it before future hotspot prediction.</div>;
   }
 
-  const bestModel = result?.selectedModel;
+  const bestModel = result?.bestModel || result?.selectedModel;
   const displayModel = result?.activeModel || result?.model || "";
   const bestModelR2 = Number(
     hotspotModelMetrics(result, bestModel)?.R2
@@ -1774,6 +1774,9 @@ function FutureCrimePrediction({ data, session, setSession }) {
             <Stat label="Best model (R²)" value={`${bestModel || "—"} · ${bestModelR2.toFixed(4)}`} detail={CARD_DETAILS.forecastBestModel} />
             <Stat label="Active model R²" value={activeModelR2.toFixed(4)} detail={CARD_DETAILS.forecastActiveR2} />
           </div>
+          {result.selectionReason && (
+            <p className="muted table-note">{result.selectionReason}</p>
+          )}
           <p className="muted table-note">
             Click any row in <strong>Regression Model Evaluation</strong> to switch the active model and refresh predictions, map, and trend chart.
           </p>

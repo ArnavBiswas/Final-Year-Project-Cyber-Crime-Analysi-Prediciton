@@ -116,6 +116,9 @@ class FutureHotspotPredictor:
         self.comparison = []
         self.risk_thresholds = {"low_max": 0.0, "medium_max": 0.0}
         self.selected_model = "Random Forest Regressor"
+        self.best_model = None
+        self.selection_reason = ""
+        self.research_model = "Voting Ensemble Regressor"
         self.crime_category = None
         self.is_trained = False
         self.folium_map_path = self.assets_dir / "future_hotspot_map.html"
@@ -251,8 +254,11 @@ class FutureHotspotPredictor:
         self.evaluation = {}
         self.comparison = []
         self.models = {}
-        best_r2 = -np.inf
+        self.best_model = None
         self.selected_model = REGRESSION_MODEL_NAMES[0]
+        self.selection_reason = ""
+
+        score_rows = []
 
         for name in REGRESSION_MODEL_NAMES:
             model = model_map[name]
@@ -276,13 +282,50 @@ class FutureHotspotPredictor:
             self.models[name] = model
             self.evaluation[name] = metrics
             self.comparison.append({"Model": name, **metrics})
-
-            if r2 >= best_r2:
-                best_r2 = r2
-                self.selected_model = name
+            score_rows.append({"Model": name, "MAE": float(mae), "RMSE": float(rmse), "R2": float(r2)})
 
         if self.selected_model not in self.models:
             raise ValueError("All regression models failed during training.")
+
+        # Decide "best" model (strict) vs "selected" (default) model.
+        # - best_model: highest R² (tie-break by lower RMSE then MAE)
+        # - selected_model: prefer research baseline (Voting Ensemble) when it is statistically comparable.
+        #   This keeps the choice logical (metrics-based) while aligning with the research narrative.
+        scored = pd.DataFrame(score_rows)
+        if not scored.empty:
+            scored = scored.sort_values(["R2", "RMSE", "MAE"], ascending=[False, True, True]).reset_index(drop=True)
+            best_row = scored.iloc[0]
+            self.best_model = str(best_row["Model"])
+
+            # Default selection policy
+            epsilon_r2 = 0.005  # allow near-ties on R²
+            rmse_slack = 0.02   # baseline RMSE can be up to 2% worse than best
+            baseline = self.research_model
+
+            selected = self.best_model
+            reason = f"Selected {selected} because it has the highest R² on the time-aware split."
+
+            if baseline in set(scored["Model"].tolist()):
+                baseline_row = scored[scored["Model"] == baseline].iloc[0]
+                best_r2 = float(best_row["R2"])
+                baseline_r2 = float(baseline_row["R2"])
+                best_rmse = float(best_row["RMSE"])
+                baseline_rmse = float(baseline_row["RMSE"])
+
+                baseline_competitive = (best_r2 - baseline_r2) <= epsilon_r2 and baseline_rmse <= best_rmse * (1 + rmse_slack)
+                if baseline_competitive:
+                    selected = baseline
+                    reason = (
+                        f"Selected {baseline} (research baseline: LR+SVR+CART) because it is within {epsilon_r2:.3f} R² "
+                        f"of the top model and its RMSE is not materially worse."
+                    )
+
+            self.selected_model = selected
+            self.selection_reason = reason
+        else:
+            # Fallback: keep initial default if all models failed (handled earlier) or no scores produced.
+            self.best_model = self.selected_model
+            self.selection_reason = f"Selected {self.selected_model} by default."
 
         # Refit every successful model on full history for selectable forecasting
         for name in self.models:
@@ -525,7 +568,11 @@ class FutureHotspotPredictor:
             "model": active_model,
             "activeModel": active_model,
             "selectedModel": self.selected_model,
-            "bestModelMetrics": self._safe_metrics(self.selected_model),
+            "bestModel": self.best_model or self.selected_model,
+            "selectionReason": self.selection_reason,
+            "researchModel": self.research_model,
+            "researchModelMetrics": self._safe_metrics(self.research_model),
+            "bestModelMetrics": self._safe_metrics(self.best_model or self.selected_model),
             "selectedModelMetrics": self._safe_metrics(active_model),
             "evaluation": self.evaluation,
             "comparison": self.comparison,

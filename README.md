@@ -3,8 +3,9 @@
 <p align="center">
   <img src="https://img.shields.io/badge/React.js-Frontend-blue?style=for-the-badge&logo=react">
   <img src="https://img.shields.io/badge/Flask-Backend-black?style=for-the-badge&logo=flask">
-  <img src="https://img.shields.io/badge/Python-ML-yellow?style=for-the-badge&logo=python">
-  <img src="https://img.shields.io/badge/Machine%20Learning-Cybercrime%20Prediction-red?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Python-Machine%20Learning-yellow?style=for-the-badge&logo=python">
+  <img src="https://img.shields.io/badge/Leaflet-Geospatial-green?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Plotly-Visualization-purple?style=for-the-badge">
   <img src="https://img.shields.io/badge/Final%20Year%20Project-2025--26-success?style=for-the-badge">
 </p>
 
@@ -12,66 +13,65 @@
 
 ## 📖 Overview
 
-Cybercrime has become one of the fastest-growing threats in the digital era, involving activities such as:
+Cybercrime has emerged as one of the fastest-growing threats in the digital era, affecting individuals, organizations, and governments worldwide. Understanding cybercrime requires the analysis of temporal trends, geographical distributions, and emerging hotspot regions. Traditional analytical approaches often struggle to capture these complex patterns effectively.
 
-- Computer Fraud
-- Credit Card Fraud
-- Cyberstalking
-- Telephone Threats
-- Identity Theft
-- Online Financial Fraud
+This project presents a **Hybrid Machine Learning Framework for Geospatial Cyber Crime Prediction and Demographic Pattern Analysis** using cybercrime-related records extracted from the Chicago Crime Dataset. The framework integrates machine learning, geospatial intelligence, exploratory data analysis, and future hotspot forecasting within a unified React–Flask dashboard.
 
-Traditional crime analysis approaches often fail to capture the complex spatial and temporal relationships present in cybercrime data.
+### Core Components
 
-This project proposes a **Hybrid Machine Learning Framework** that combines:
-
-- Machine Learning Classification
-- Future Hotspot Prediction
-- Geospatial Analysis
-- Temporal Analysis
-- Interactive Visualization
-- Demographic Pattern Exploration
-
-The framework uses the **Chicago Crime Dataset** filtered for cyber-related crimes and provides an intelligent dashboard for crime analytics and predictive decision-making.
+* Cybercrime Classification
+* Geospatial Hotspot Analysis
+* District-wise Crime Analysis
+* Temporal Trend Analysis
+* Future Hotspot Prediction
+* Risk Assessment
+* Interactive Dashboard Visualization
 
 ---
 
 # 🎯 Objectives
 
-- Analyze cybercrime patterns using data analytics.
-- Identify geographical cybercrime hotspots.
-- Perform district-wise crime analysis.
-- Analyze time-based cybercrime trends.
-- Compare multiple machine learning algorithms.
-- Forecast future cybercrime hotspots.
-- Support data-driven decision making.
-- Provide an interactive analytical dashboard.
+* Analyze cybercrime patterns using machine learning and data analytics.
+* Identify cybercrime hotspot regions through geospatial visualization.
+* Study district-wise cybercrime distribution.
+* Analyze temporal crime trends and seasonal variations.
+* Compare multiple machine learning classification models.
+* Forecast future cybercrime hotspots using regression techniques.
+* Support data-driven decision-making.
+* Develop an interactive web-based analytical dashboard.
 
 ---
 
-# 🏆 Recognition
+# 🏆 Research Recognition
 
-This research work was presented at the **8th Regional Science & Technology Congress (2025–26)** organized by the **Department of Science and Technology and Biotechnology, Government of West Bengal**.
+### Outstanding Paper Award
 
-🏅 **Outstanding Paper Award – Engineering & Technology Discipline**
+This research was presented at the **8th Regional Science & Technology Congress (2025–26)** in the discipline of **Engineering & Technology**.
+
+**Venue:** University of North Bengal
+**Date:** 3rd–4th February 2026
 
 ---
 
 # 👨‍💻 Project Team
 
 ### Department of Computer Science & Engineering
+
 ### Siliguri Institute of Technology
 
-| Name | Roll No |
-|--------|----------|
-| Arnav Biswas | 11900122143 |
-| Ayandeep Roy | 11900122117 |
+| Name               | Roll Number |
+| ------------------ | ----------- |
+| Arnav Biswas       | 11900122143 |
+| Ayandeep Roy       | 11900122117 |
 | Suryashis Banerjee | 11900122158 |
-| Rimi Dutta | 11900122166 |
+| Rimi Dutta         | 11900122166 |
 
 ### Project Guide
 
 **Dr. Anupam Mukherjee**
+Assistant Professor
+Department of Computer Science & Engineering
+Siliguri Institute of Technology
 
 ---
 
@@ -81,85 +81,94 @@ This research work was presented at the **8th Regional Science & Technology Cong
 Chicago Crime Dataset
           │
           ▼
- Data Preprocessing
+Data Cleaning & Validation
           │
           ▼
- Feature Engineering
+Feature Engineering
           │
           ▼
- ┌─────────────────────────┐
- │ Exploratory Analysis    │
- └─────────────────────────┘
+Exploratory Data Analysis
           │
+ ┌────────┴────────┐
+ ▼                 ▼
+
+Classification     Future Hotspot
+Pipeline           Prediction Pipeline
+
+ ▼                 ▼
+
+Voting Ensemble    Voting Ensemble
+Classifier         Regressor
+
+ └────────┬────────┘
           ▼
- ┌─────────────────────────┐
- │ Machine Learning Models │
- └─────────────────────────┘
-          │
-          ▼
- ┌─────────────────────────┐
- │ Geospatial Analytics    │
- └─────────────────────────┘
-          │
-          ▼
- ┌─────────────────────────┐
- │ Future Hotspot Forecast │
- └─────────────────────────┘
-          │
-          ▼
- React + Flask Dashboard
+
+React + Flask Dashboard
 ```
 
 ---
 
 # 📊 Dataset Information
 
-### Dataset Source
+## Dataset Source
 
 Chicago Open Data Portal
 
-### Crime Categories
+## Cybercrime Categories
 
-- COMPUTER FRAUD
-- CREDIT CARD FRAUD
-- CYBERSTALKING
-- TELEPHONE THREAT
-- VIOLATION GPS MONITORING DEVICE
-- FALSE/STOLEN/ALTERED TRP
+* COMPUTER FRAUD
+* CREDIT CARD FRAUD
+* CYBERSTALKING
+* TELEPHONE THREAT
+* VIOLATION GPS MONITORING DEVICE
+* FALSE/STOLEN/ALTERED TRP
 
-### Dataset Features
+---
 
-#### Temporal Features
+## Dataset Features
 
-- Year
-- Month
-- Day
-- Hour
-- Weekday
+### Temporal Features
 
-#### Spatial Features
+* Year
+* Month
+* Day
+* Hour
+* Weekday
+* Weekend
 
-- District
-- Ward
-- Beat
-- Latitude
-- Longitude
+### Spatial Features
+
+* District
+* Beat
+* Ward
+* Latitude
+* Longitude
 
 ---
 
 # ⚙️ Feature Engineering
 
-The following features were generated and transformed:
+The framework performs extensive feature engineering for both classification and forecasting.
 
-- District Encoding
-- Month Extraction
-- Hour Extraction
-- Weekday Extraction
-- Weekend Flag
-- Latitude Normalization
-- Longitude Normalization
-- Temporal Pattern Features
-- Spatial Pattern Features
+### Classification Features
+
+* District Encoding
+* Hour Extraction
+* Month Extraction
+* Weekday Extraction
+* Weekend Indicator
+* Latitude Features
+* Longitude Features
+
+### Forecasting Features
+
+* Lag Crime Count
+* Moving Average
+* Growth Rate
+* Quarter
+* Month Sin
+* Month Cos
+* District Encoding
 
 ---
 
@@ -167,67 +176,73 @@ The following features were generated and transformed:
 
 ## Classification Models
 
-The framework compares multiple supervised learning algorithms:
+| Model                        |
+| ---------------------------- |
+| Naive Bayes                  |
+| Logistic Regression          |
+| Support Vector Machine (SVM) |
+| Decision Tree (CART)         |
+| Voting Ensemble Classifier   |
 
-| Model | Purpose |
-|---------|---------|
-| Naive Bayes | Classification |
-| Logistic Regression | Classification |
-| Support Vector Machine (SVM) | Classification |
-| Decision Tree | Classification |
-| Voting Ensemble Classifier | Classification |
+### Voting Ensemble
+
+The ensemble combines:
+
+* Logistic Regression
+* Support Vector Machine
+* Decision Tree
 
 ---
 
 ## Future Hotspot Prediction Models
 
-The forecasting module includes:
-
-| Model |
-|---------|
-| Linear Regression |
+| Model                           |
+| ------------------------------- |
+| Linear Regression               |
 | Support Vector Regression (SVR) |
-| Decision Tree Regressor |
-| Voting Ensemble Regressor |
+| Decision Tree Regressor         |
+| Voting Ensemble Regressor       |
 
 ---
 
 # 📈 Evaluation Metrics
 
-### Classification Metrics
+## Classification Metrics
 
-- Accuracy
-- Precision
-- Recall
-- F1 Score
-- Confusion Matrix
+* Accuracy
+* Precision
+* Recall
+* F1 Score
+* Confusion Matrix
 
-### Regression Metrics
+## Forecasting Metrics
 
-- MAE (Mean Absolute Error)
-- RMSE (Root Mean Squared Error)
-- R² Score
+* Mean Absolute Error (MAE)
+* Root Mean Squared Error (RMSE)
+* R² Score
 
 ---
 
-# 🌍 Geospatial Analysis
+# 🌍 Geospatial Analytics
 
-The project incorporates advanced geospatial analytics:
+The framework incorporates advanced geospatial intelligence techniques.
 
 ### Features
 
-- Cybercrime Heatmaps
-- Hotspot Identification
-- District-wise Visualization
-- Spatial Density Analysis
-- Location Intelligence
+* Crime Heatmaps
+* Hotspot Detection
+* District-wise Visualization
+* Spatial Density Analysis
+* Crime Distribution Mapping
+* Future Hotspot Mapping
 
 ### Benefits
 
-- High-risk region identification
-- Resource allocation support
-- Crime concentration analysis
-- Geographical trend detection
+* High-risk region identification
+* Resource allocation support
+* Crime concentration analysis
+* Geographical trend detection
+* Decision-support insights
 
 ---
 
@@ -235,36 +250,52 @@ The project incorporates advanced geospatial analytics:
 
 ## 🏠 Home
 
-Project overview and navigation.
+* Project Overview
+* Navigation Interface
+* Dataset Upload
 
 ## 📂 Dataset Overview
 
-- Dataset statistics
-- Crime distribution
-- Data summaries
+* Dataset Statistics
+* Dataset Preview
+* Crime Category Distribution
+* Dataset Cleaning Report
 
 ## 📈 Analysis Module
 
-- District-wise analysis
-- Time-wise analysis
-- Crime category distribution
-- Interactive visualizations
+* Spatial Analysis
+* Temporal Analysis
+* Time-wise Spatial Analysis
+* District-wise Insights
 
 ## 🤖 Machine Learning Module
 
-- Model training
-- Model comparison
-- Performance evaluation
+* Model Training
+* Model Evaluation
+* Performance Comparison
+* Prediction Analysis
+
+## 🌍 Geospatial Module
+
+* Heatmaps
+* Hotspot Detection
+* Crime Density Visualization
+* District Mapping
 
 ## 🔮 Future Hotspot Prediction
 
-- Crime forecasting
-- Risk assessment
-- Future hotspot visualization
+* Crime Forecasting
+* Risk Assessment
+* Trend Analysis
+* Future Hotspot Maps
 
 ## ℹ️ About
 
-Project details and documentation.
+* Project Information
+* Team Information
+* Guide Details
+* Award Certificate
+* Department Information
 
 ---
 
@@ -272,115 +303,82 @@ Project details and documentation.
 
 ## Frontend
 
-- React.js
-- JavaScript
-- HTML5
-- CSS3
-- Bootstrap
-- Plotly.js
-- Leaflet.js
+* React.js
+* JavaScript
+* HTML5
+* CSS3
+* Bootstrap
+* Plotly.js
+* Leaflet.js
 
 ## Backend
 
-- Flask
-- Python
+* Flask
+* Python
 
 ## Machine Learning
 
-- Scikit-Learn
-- NumPy
-- Pandas
+* Scikit-Learn
+* Pandas
+* NumPy
 
 ## Visualization
 
-- Plotly
-- Matplotlib
-- Leaflet
+* Plotly
+* Matplotlib
+
+## Geospatial Analytics
+
+* Leaflet
+* OpenStreetMap
 
 ---
 
-# 🚀 Installation
+# ✨ Key Features
 
-## Clone Repository
-
-```bash
-git clone https://github.com/yourusername/cybercrime-prediction.git
-
-cd cybercrime-prediction
-```
-# 📷 Project Features
-
-✅ Interactive Dashboard
-
-✅ Geospatial Heatmaps
+✅ Interactive React–Flask Dashboard
 
 ✅ Cybercrime Classification
 
+✅ Voting Ensemble Classification
+
+✅ Geospatial Heatmaps
+
 ✅ District-wise Analysis
 
-✅ Time-wise Analysis
+✅ Temporal Trend Analysis
 
-✅ Future Hotspot Prediction
+✅ Future Hotspot Forecasting
 
-✅ Ensemble Learning
-
-✅ React–Flask Integration
+✅ Risk Assessment
 
 ✅ Machine Learning Model Comparison
 
-✅ Crime Forecasting
+✅ Crime Density Visualization
+
+✅ Spatial Pattern Analysis
 
 ---
 
 # 🔬 Future Scope
 
-Future enhancements may include:
-
-- Explainable AI (XAI)
-- Real-Time Crime Monitoring
-- NLP-based Threat Detection
-- Social Media Analytics
-- Dark Web Monitoring
-- Cloud Deployment
-- Mobile Dashboard
-- Smart City Integration
-- AI-powered Alert Systems
-- Multi-City Comparative Analysis
-
----
-
-# 📚 References
-
-[1] Veena K., Meena K., Teekaraman Y., Kuppusamy R., Radhakrishnan A.
-*C SVM Classification and KNN Techniques for Cyber Crime Detection*, 2022.
-
-[2] Sahaya Sheela M., Hemanand D., Ranadheer Reddy V.
-*Cyber Security System Based on Machine Learning Using Logistic Decision Support Vector*, 2023.
-
-[3] Yeboah-Ofori A.
-*Classification of Malware Attacks Using Machine Learning in Decision Tree*, 2020.
-
-[4] Pandey H., Goyal R., Virmani D., Gupta C.
-*Ensem_SLDR: Classification of Cybercrime using Ensemble Learning Technique*, 2022.
-
-[5] Cao D. M. et al.
-*Advanced Cybercrime Detection: A Comprehensive Study on Supervised and Unsupervised Machine Learning Approaches Using Real-world Datasets*, 2024.
-
-[6] Panigrahy S.
-*Geospatial Crime Analytics: A GIS-Based Approach Towards Prediction of Crime Hotspots*, 2021.
-
-[7] Jawla A., Singh M., Hooda N.
-*Crime Forecasting using Folium*, 2020.
-
-[8] Ajagbe S. A., Oladipupo M. A., Balogun E. O.
-*Crime Belt Monitoring via Data Visualization: A Case Study of Folium*, 2020.
-
-[9] Ahishakiye E., Taremwa D., Omulo E. O., Niyonzima I.
-*Crime Prediction Using Decision Tree (J48) Classification Algorithm*, 2017.
+* Explainable AI (XAI)
+* Real-Time Crime Monitoring
+* Social Media Threat Intelligence
+* Dark Web Monitoring
+* AI-Powered Alert Systems
+* Cloud Deployment
+* Smart City Integration
+* Mobile Dashboard Development
+* Multi-City Comparative Analytics
+* Graph Neural Networks (GNN)
+* Spatio-Temporal Forecasting Models
 
 ---
 
 
+## 📜 License
 
-© This project was developed for academic and research purposes as part of the Bachelor of Technology (B.Tech) degree requirement at Siliguri Institute of Technology.
+This project was developed as part of the Bachelor of Technology (B.Tech) degree requirements at Siliguri Institute of Technology.
+
 

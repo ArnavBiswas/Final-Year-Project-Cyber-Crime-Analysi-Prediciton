@@ -20,6 +20,8 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from regression_models import REGRESSION_MODEL_NAMES, regression_models
 from utils import district_map, get_district_table
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
 # Risk marker colours used in Folium maps and the React Leaflet view
 RISK_COLORS = {
     "LOW": "#16a34a",
@@ -104,7 +106,7 @@ class FutureHotspotPredictor:
     """
 
     def __init__(self, assets_dir=None):
-        self.assets_dir = Path(assets_dir or Path(__file__).parent / "react_app" / "assets")
+        self.assets_dir = Path(assets_dir or PROJECT_ROOT / "assets")
         self.assets_dir.mkdir(parents=True, exist_ok=True)
 
         self.monthly_df = pd.DataFrame()

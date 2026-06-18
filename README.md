@@ -308,6 +308,25 @@ git clone https://github.com/yourusername/cybercrime-prediction.git
 
 cd cybercrime-prediction
 ```
+
+## Project Structure
+
+```text
+backend/     Flask API, preprocessing, and ML model code
+frontend/    Dashboard HTML, CSS, and browser JavaScript
+assets/      Team images, certificate image, and generated Folium map
+react_api.py Root launcher kept for `python react_api.py`
+```
+
+## Run Locally
+
+```bash
+pip install -r requirements.txt
+python react_api.py
+```
+
+Then open `http://127.0.0.1:5000/`.
+
 # 📷 Project Features
 
 ✅ Interactive Dashboard

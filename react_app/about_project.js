@@ -1,5 +1,3 @@
-const { useEffect, useState } = React;
-
 function AboutSection({ eyebrow, title, description, children }) {
   return (
     <section className="section-block">
@@ -16,7 +14,7 @@ function AboutSection({ eyebrow, title, description, children }) {
 }
 
 function AboutProfilePhoto({ src, alt }) {
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = React.useState(false);
   return (
     <div className="about-photo">
       {!failed ? (
@@ -29,9 +27,9 @@ function AboutProfilePhoto({ src, alt }) {
 }
 
 function AboutProject() {
-  const [zoomCertificate, setZoomCertificate] = useState(false);
+  const [zoomCertificate, setZoomCertificate] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const onKeyDown = (event) => {
       if (event.key === "Escape") setZoomCertificate(false);
     };

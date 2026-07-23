@@ -1,4 +1,4 @@
-gunicorn
+gunicorn==23.0.0
 flask>=3.0
 numpy>=1.26
 pandas>=2.1

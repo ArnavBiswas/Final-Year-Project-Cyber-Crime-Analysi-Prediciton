@@ -337,6 +337,8 @@ python react_api.py
 
 Then open `http://127.0.0.1:5000/`.
 
+💡 Prefer not to install anything? Try the [live demo](https://final-year-project-cyber-crime-analysi.onrender.com/) instead.
+
 # 📷 Project Features
 
 ✅ Interactive Dashboard

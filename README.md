@@ -10,6 +10,16 @@
 
 ---
 
+---
+
+# 🌐 Live Demo
+
+🔗 **[Access the Live Application](https://final-year-project-cyber-crime-analysi.onrender.com/)**
+
+> ⚠️ Note: This app is hosted on Render's free tier, so it may take **30–60 seconds** to spin up on the first load if it's been idle. Please be patient — it'll load fine after that.
+
+---
+
 ## 📖 Overview
 
 Cybercrime has become one of the fastest-growing threats in the digital era, involving activities such as:
